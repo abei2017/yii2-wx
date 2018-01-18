@@ -1,0 +1,22 @@
+{
+    "name": "abei2017/yii2-wx",
+    "description": "一个专注于yii2的微信sdk",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","wechat"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "abei",
+            "email": "abei@nai8.me"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+        "yiisoft/yii2-httpclient": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "abei2017\\wx\\": ""
+        }
+    }
+}
