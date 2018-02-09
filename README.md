@@ -9,11 +9,17 @@
 
 <hr/>
 
-<p style="margin-top:35px;" align="center">
+<p align="center">
     感谢下面伙伴的支持
 </p>
 <p align="center">
-    <a href="https://nai8.me/yii2wx">
+    <a href="https://nai8.me">
         <img src="https://nai8.me/images/logo.png" height="90" alt="https://nai8.me"/>
     </a>
+</p>
+<p align="center">
+    <img src="https://nai8.me/images/qrcodes/xiaobao-qrcode.jpg" height="90" alt="北哥小报"/>
+</p>
+<p align="center">
+    除了代码，还有诗和远方。扫码关注我的公众号。
 </p>
