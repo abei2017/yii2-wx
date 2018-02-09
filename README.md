@@ -23,3 +23,14 @@
 <p align="center">
     除了代码，还有诗和远方。扫码关注我的公众号。
 </p>
+
+## 系统需求（Requirement）
+- PHP >= 5.4
+- Composer
+- openssl
+- fileinfo
+
+## 安装（Install）
+```php
+$ composer require "abei2017/yii2-wx" -vvv
+```
