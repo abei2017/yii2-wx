@@ -35,6 +35,11 @@
 $ composer require "abei2017/yii2-wx" -vvv
 ```
 
+## 功能支持（Apis）
+- <input type="checkbox" checked>
+
+更多请参考 https://nai8.me/yii2wx
+
 ## 文档（Documentation）
 - 用法速查
 - 文档中心
