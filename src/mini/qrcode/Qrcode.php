@@ -14,8 +14,11 @@ use abei2017\wx\core\AccessToken;
 
 class Qrcode extends Driver {
 
-    //  获取不熟限制的小程序码
+    //  获取不受限制的小程序码
     const API_UN_LIMIT_CREATE = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
+
+    //  生成永久小程序码（数量有限）
+    const API_CREATE = 'https://api.weixin.qq.com/wxa/getwxacode';
 
     private $accessToken = null;
 

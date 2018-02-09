@@ -5,9 +5,6 @@ namespace abei2017\wx\mp\user;
 use abei2017\wx\core\Driver;
 use abei2017\wx\core\AccessToken;
 use abei2017\wx\core\Exception;
-use yii\helpers\VarDumper;
-use yii\httpclient\Client;
-use yii\httpclient\StreamTransport;
 
 /**
  * 备注助手

@@ -35,16 +35,17 @@ class AccessToken extends Driver {
      * @return string
      */
     public function getToken($cacheRefresh = false){
+        $cacheKey = "{$this->cacheKey}-{$this->conf['app_id']}";
         if($cacheRefresh == true){
-            Yii::$app->cache->delete($this->cacheKey);
+            Yii::$app->cache->delete($cacheKey);
         }
 
-        $data = Yii::$app->cache->get($this->cacheKey);
+        $data = Yii::$app->cache->get($cacheKey);
         if($data == false){
             $token = $this->getTokenFromServer();
 
             $data = $token['access_token'];
-            Yii::$app->cache->set($this->cacheKey,$data,$token['expires_in']-600);
+            Yii::$app->cache->set($cacheKey,$data,$token['expires_in']-600);
         }
 
         return $data;

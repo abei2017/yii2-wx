@@ -19,6 +19,18 @@ class OAuth extends Driver {
     protected $accessToken = false;
     protected $openId = false;
 
+    /**
+     * 网页授权access_token
+     * @var string
+     */
+    protected $accessTokenCacheKey = 'wx-oauth-access-token';
+
+    /**
+     * refresh_token
+     * @var string
+     */
+    protected $refreshAccessTokenCacheKey = 'wx-oauth-refresh-access-token';
+
     public function send(){
         $url = self::API_URL."?appid={$this->conf['app_id']}&redirect_uri={$this->conf['oauth']['callback']}&response_type=code&scope={$this->conf['oauth']['scopes']}&state=STATE#wechat_redirect";
         header("location:{$url}");
@@ -40,8 +52,6 @@ class OAuth extends Driver {
 
         $this->accessToken = $accessTokenInfo['access_token'];
         $this->openId = $accessTokenInfo['openid'];
-
-
     }
 
     protected function getCode(){

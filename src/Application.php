@@ -24,8 +24,12 @@ class Application extends Component {
         'mp.js'=>'abei2017\wx\mp\js\Js',
         'mp.template'=>'abei2017\wx\mp\template\Template',
         'mp.pay'=>'abei2017\wx\mp\payment\Pay',//  支付接口
+        'mp.mch'=>'abei2017\wx\mp\payment\Mch',//  支付接口
+        'mp.redbag'=>'abei2017\wx\mp\payment\Redbag',//  支付接口
         'mp.oauth'=>'abei2017\wx\mp\oauth\OAuth',//  支付接口
-        'mp.accessToken'=>'abei2017\wx\mp\accessToken\AccessToken',//  支付接口
+        'mp.resource'=>'abei2017\wx\mp\resource\Resource',//  素材助手
+        'mp.kf'=>'abei2017\wx\mp\kf\Kf',//  客服助手
+        'mp.customService'=>'abei2017\wx\mp\kf\CustomService',//  客服助手
 
         'mini.user'=>'abei2017\wx\mini\user\User',
         'mini.pay'=>'abei2017\wx\mini\payment\Pay',
