@@ -30,7 +30,15 @@
 - openssl
 - fileinfo
 
-## 安装（Install）
+## 安装（Installation）
 ```php
 $ composer require "abei2017/yii2-wx" -vvv
 ```
+
+## 文档（Documentation）
+- 用法速查
+- 文档中心
+- 视频
+
+## 开源协议（License）
+MIT
