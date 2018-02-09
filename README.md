@@ -40,10 +40,12 @@ $ composer require "abei2017/yii2-wx" -vvv
 
 更多请参考 https://nai8.me/yii2wx
 
+## 学习yii2-wx（learning yii2-wx）
+北哥已将yii2-wx的配置和使用设计的简单易懂，因此通过文档和速查表你可以轻松的学会它，但是这也需要你之前对微信相关文档有所阅读，如果你是一名yii2或微信接口开发的初学者，我在自己的知识分享设置了一套针对性的视频课程（<a href="http://nai8.me/book/view.html?id=24" target="_blank">点击查看</a>），我想能让你零起步。
+
 ## 文档（Documentation）
 - 用法速查
 - 文档中心
-- 视频
 
 ## 开源协议（License）
 MIT
