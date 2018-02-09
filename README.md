@@ -18,7 +18,7 @@
     </a>
 </p>
 <p align="center">
-    <img src="https://nai8.me/images/qrcodes/xiaobao-qrcode.jpg" height="90" alt="北哥小报"/>
+    <img src="https://nai8.me/images/qrcodes/xiaobao-qrcode.jpg" height="180" alt="北哥小报"/>
 </p>
 <p align="center">
     除了代码，还有诗和远方。扫码关注我的公众号。
