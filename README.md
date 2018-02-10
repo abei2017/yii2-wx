@@ -41,7 +41,7 @@
 $ composer require "abei2017/yii2-wx" -vvv
 ```
 
-## 配置
+## 配置（set）
 配置参数建议存放到yii2的配置文件中，例如基础版yii2可以如下配置
 ```php
 return [
@@ -86,6 +86,19 @@ return [
 ];
 ```
 对于配置，请不要修改数据的key值。
+
+## 使用（use）
+yii2-wx采用单一接口驱动功能的思路，比如下面的代码将生成一个微信带参数的二维码。
+
+```php
+use abei2017\wx\Application;
+
+$conf = Yii::$app->params['wx']['mp'];
+$app = new Application(['conf'=>$conf]);
+
+$qrcode = $app->driver('mp.qrcode');
+$data = $qrcode->intTemp(3600,9527);// 生成一个数字类临时二维码，有效期为3600秒
+```
 
 ## 学习yii2-wx（learning yii2-wx）
 北哥已将yii2-wx的配置和使用设计的简单易懂，因此通过文档和速查表你可以轻松的学会它，但是这也需要你之前对微信相关文档有所阅读，如果你是一名yii2或微信接口开发的初学者，我在自己的知识分享设置了一套针对性的视频课程（<a href="http://nai8.me/book/view.html?id=24" target="_blank">点击查看</a>），我想能让你零起步。
