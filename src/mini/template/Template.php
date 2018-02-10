@@ -1,14 +1,25 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace abei2017\wx\mini\template;
 
 use abei2017\wx\core\Driver;
 use Yii;
 use yii\httpclient\Client;
+
 /**
- * Class Tmpl.
- *
- * @package abei2017\mini\tmpl
+ * Template
+ * 小程序模板消息
+ * @author abei<abei@nai8.me>
+ * @link https://nai8.me/yii2wx
+ * @package abei2017\wx\mini\template
  */
 class Template extends Driver {
 
@@ -29,11 +40,8 @@ class Template extends Driver {
             'form_id'=>$formId,
             'data'=>$data,
         ],$extra);
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_SEND_TMPL.$this->accessToken->getToken())
-            ->setMethod('post')
-            ->setFormat(Client::FORMAT_JSON)
-            ->setData($params)->send();
+        $response = $this->post(self::API_SEND_TMPL.$this->accessToken->getToken(),$params)->setFormat(Client::FORMAT_JSON)->send();
+
         return $response->getContent();
     }
 }

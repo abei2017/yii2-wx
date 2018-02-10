@@ -1,28 +1,40 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace abei2017\wx\mp\payment;
 
 use abei2017\wx\core\Exception;
 use Yii;
 use abei2017\wx\core\Driver;
-use abei2017\wx\helpers\Xml;
 use yii\httpclient\Client;
+use abei2017\wx\helpers\Util;
 
+/**
+ * Mch
+ * 企业付款接口
+ *
+ * @author abei<abei@nai8.me>
+ * @link http://nai8.me/yii2wx
+ * @package abei2017\wx\mp\payment
+ */
 class Mch extends Driver {
 
     const API_SEND_URL = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers';
     const API_QUERY_URL = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo';
 
     /**
-     * 发送
-     * @param $params array
-     * $params = [
-     *  'partner_trade_no'=>'xxx',// 必填
-     *  'openid'=>'xxx',// 必填
-     *  'amount'=>'xxx',// 必填
-     *  'desc'=>'xxx',// 必填
-     *  'check_name'=>'NO_CHECK',// 必填 或FORCE_CHECK
-     * ]
+     * 发送企业付款到零钱包
+     *
+     * @param $params array 付款参数（必填参数为partner_trade_no、openid、amount、desc、check_name）
      * @throws Exception
+     * @return array
      */
     public function send($params = []){
         $conf = [
@@ -32,28 +44,20 @@ class Mch extends Driver {
             'nonce_str'=>Yii::$app->security->generateRandomString(32)
         ];
         $params = array_merge($params,$conf);
-        $params['sign'] = $this->makeSign($params);
+        $params['sign'] = Util::makeSign($params,$this->conf['payment']['key']);
 
-        $certs = [
-            'SSLCERT' => $this->conf['payment']['cert_path'],
-            'SSLKEY' => $this->conf['payment']['key_path'],
+        $options = [
+            CURLOPT_SSLCERTTYPE=>'PEM',
+            CURLOPT_SSLCERT=>$this->conf['payment']['cert_path'],
+            CURLOPT_SSLKEYTYPE=>'PEM',
+            CURLOPT_SSLKEY=>$this->conf['payment']['key_path'],
         ];
 
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_SEND_URL)
-            ->setMethod('post')
-            ->setData($params)
-            ->setFormat(Client::FORMAT_XML)
-            ->setOptions([
-                CURLOPT_SSLCERTTYPE=>'PEM',
-                CURLOPT_SSLCERT=>$certs['SSLCERT'],
-                CURLOPT_SSLKEYTYPE=>'PEM',
-                CURLOPT_SSLKEY=>$certs['SSLKEY'],
-            ])
-            ->send();
+        $response = $this->post(self::API_SEND_URL,$params,[],$options)
+            ->setFormat(Client::FORMAT_XML)->send();
 
         if($response->isOk == false){
-            throw new Exception('无响应');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_XML);
@@ -75,8 +79,6 @@ class Mch extends Driver {
      * 只支持查询30天内的订单，30天之前的订单请登录商户平台查询。
      *
      * @param $partnerTradeNo string 商户订单号
-     * @author abei<abei@nai8.me>
-     * @link https://nai8.me
      * @return array
      * @throws Exception
      */
@@ -87,28 +89,19 @@ class Mch extends Driver {
             'partner_trade_no'=>$partnerTradeNo,
             'nonce_str'=>Yii::$app->security->generateRandomString(32)
         ];
-        $params['sign'] = $this->makeSign($params);
+        $params['sign'] = Util::makeSign($params,$this->conf['payment']['key']);
 
-        $certs = [
-            'SSLCERT' => $this->conf['payment']['cert_path'],
-            'SSLKEY' => $this->conf['payment']['key_path'],
+        $options = [
+            CURLOPT_SSLCERTTYPE=>'PEM',
+            CURLOPT_SSLCERT=>$this->conf['payment']['cert_path'],
+            CURLOPT_SSLKEYTYPE=>'PEM',
+            CURLOPT_SSLKEY=>$this->conf['payment']['key_path'],
         ];
 
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_QUERY_URL)
-            ->setMethod('post')
-            ->setData($params)
-            ->setFormat(Client::FORMAT_XML)
-            ->setOptions([
-                CURLOPT_SSLCERTTYPE=>'PEM',
-                CURLOPT_SSLCERT=>$certs['SSLCERT'],
-                CURLOPT_SSLKEYTYPE=>'PEM',
-                CURLOPT_SSLKEY=>$certs['SSLKEY'],
-            ])
-            ->send();
+        $response = $this->post(self::API_QUERY_URL,$params,[],$options)->setFormat(Client::FORMAT_XML)->send();
 
         if($response->isOk == false){
-            throw new Exception('无响应');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_XML);
@@ -123,24 +116,5 @@ class Mch extends Driver {
         }
 
         return $result;
-    }
-
-    private function makeSign($params){
-        ksort($params);
-        $str = $this->toUrlParams($params);
-        $str .= "&key=".$this->conf['payment']['key'];
-        return strtoupper(md5($str));
-    }
-
-    private function toUrlParams($vals){
-        $buff = "";
-        foreach($vals as $k=>$v){
-            if($k != "sign" && $v != "" && is_array($v) == false){
-                $buff .= $k . "=" . $v . "&";
-            }
-        }
-
-        $buff = trim($buff,"&");
-        return $buff;
     }
 }

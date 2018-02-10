@@ -1,40 +1,79 @@
 <?php
+
+/*
+ * This file is part of the abei2017/yii2-wx.
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace abei2017\wx;
 
 use Yii;
 use yii\base\Component;
 use yii\httpclient\Client;
 
+/**
+ * bootstrap
+ * 此类负责模块其他类的驱动以及相关变量的初始化
+ *
+ * @link https://nai8.me
+ * @package abei2017\wx
+ */
 class Application extends Component {
 
+    /**
+     * yii2-wx配置
+     * @var
+     */
     public $conf;
 
+    /**
+     * http客户端
+     * @var
+     */
     public $httpClient;
 
+    /**
+     * 类映射
+     * @var array
+     */
     public $classMap = [
-        'core.accessToken'=>'abei2017\wx\core\AccessToken',
+        /**
+         * 基础接口
+         */
+        'core.accessToken'=>'abei2017\wx\core\AccessToken',// token
 
-        'mp.qrcode'=>'abei2017\wx\mp\qrcode\Qrcode',//  基础
-        'mp.shorturl'=>'abei2017\wx\mp\qrcode\Shorturl',//  基础
-        'mp.server'=>'abei2017\wx\mp\server\Server',//  服务接口
-        'mp.remark'=>'abei2017\wx\mp\user\Remark',//  会员接口
-        'mp.user'=>'abei2017\wx\mp\user\User',//  会员接口
-        'mp.tag'=>'abei2017\wx\mp\user\Tag',//  标签接口
-        'mp.menu'=>'abei2017\wx\mp\menu\Menu',
-        'mp.js'=>'abei2017\wx\mp\js\Js',
-        'mp.template'=>'abei2017\wx\mp\template\Template',
+        /**
+         * 公众号接口
+         */
+        'mp.base'=>'abei2017\wx\mp\core\Base',    // 二维码
+        'mp.qrcode'=>'abei2017\wx\mp\qrcode\Qrcode',    // 二维码
+        'mp.shorturl'=>'abei2017\wx\mp\qrcode\Shorturl',    // 短地址
+        'mp.server'=>'abei2017\wx\mp\server\Server',    // 服务接口
+        'mp.remark'=>'abei2017\wx\mp\user\Remark',  //  会员备注
+        'mp.user'=>'abei2017\wx\mp\user\User',  //  会员管理
+        'mp.tag'=>'abei2017\wx\mp\user\Tag',    //  会员标签
+        'mp.menu'=>'abei2017\wx\mp\menu\Menu',  // 菜单
+        'mp.js'=>'abei2017\wx\mp\js\Js',    //  JS
+        'mp.template'=>'abei2017\wx\mp\template\Template', //   消息模板
         'mp.pay'=>'abei2017\wx\mp\payment\Pay',//  支付接口
-        'mp.mch'=>'abei2017\wx\mp\payment\Mch',//  支付接口
-        'mp.redbag'=>'abei2017\wx\mp\payment\Redbag',//  支付接口
-        'mp.oauth'=>'abei2017\wx\mp\oauth\OAuth',//  支付接口
-        'mp.resource'=>'abei2017\wx\mp\resource\Resource',//  素材助手
-        'mp.kf'=>'abei2017\wx\mp\kf\Kf',//  客服助手
-        'mp.customService'=>'abei2017\wx\mp\kf\CustomService',//  客服助手
+        'mp.mch'=>'abei2017\wx\mp\payment\Mch',//  企业付款
+        'mp.redbag'=>'abei2017\wx\mp\payment\Redbag',//  红包
+        'mp.oauth'=>'abei2017\wx\mp\oauth\OAuth',//  web授权
+        'mp.resource'=>'abei2017\wx\mp\resource\Resource',//  素材
+        'mp.kf'=>'abei2017\wx\mp\kf\Kf',//  客服
+        'mp.customService'=>'abei2017\wx\mp\kf\CustomService',//  群发
 
-        'mini.user'=>'abei2017\wx\mini\user\User',
-        'mini.pay'=>'abei2017\wx\mini\payment\Pay',
-        'mini.qrcode'=>'abei2017\wx\mini\qrcode\Qrcode',
-        'mini.template'=>'abei2017\wx\mini\template\Template',
+        /**
+         * 微信小程序接口
+         */
+        'mini.user'=>'abei2017\wx\mini\user\User', // 会员
+        'mini.pay'=>'abei2017\wx\mini\payment\Pay', // 支付
+        'mini.qrcode'=>'abei2017\wx\mini\qrcode\Qrcode', // 二维码&小程序码
+        'mini.template'=>'abei2017\wx\mini\template\Template', // 模板消息
     ];
 
     public function init(){
@@ -44,6 +83,14 @@ class Application extends Component {
         ]);
     }
 
+    /**
+     * 驱动函数
+     * 此函数主要负责生成相关类的实例化对象并传递相关参数
+     *
+     * @param $api string 类的映射名
+     * @param array $extra  附加参数
+     * @return object
+     */
     public function driver($api,$extra = []){
         $config = [
             'conf'=>$this->conf,

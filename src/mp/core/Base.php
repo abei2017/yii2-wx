@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the abei2017/yii2-wx
  *
@@ -7,36 +8,36 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace abei2017\wx\mp\core;
 
 use abei2017\wx\core\AccessToken;
-use yii\base\Exception;
+use abei2017\wx\core\Exception;
+use abei2017\wx\core\Driver;
 
 /**
- * Class Base
+ * Base
  * 这里呈现一些基础的内容
+ *
  * @package abei2017\wx\core
+ * @author abei<abei@nai8.me>
+ * @link https://nai8.me/yii2wx
  */
 class Base extends Driver {
 
-    const BASE_IP_API = "https://api.weixin.qq.com/cgi-bin/getcallbackip";
+    const API_BASE_IP_URL = "https://api.weixin.qq.com/cgi-bin/getcallbackip";
 
     /**
      * 获取微信服务器IP或IP段
      */
     public function getValidIps(){
-        $access = new AccessToken(['conf'=>$this->conf,'httpClient'=>$this->httpClient,'extra'=>[]]);
+        $access = new AccessToken(['conf'=>$this->conf,'httpClient'=>$this->httpClient]);
         $accessToken = $access->getToken();
 
-        $params = ['access_token'=>$accessToken];
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::BASE_IP_API)
-            ->setMethod('get')
-            ->setData($params)->send();
+        $response = $this->get(self::API_BASE_IP_URL,['access_token'=>$accessToken])->send();
 
         $data = $response->getData();
-
-        if(!isset($data["ip_list"])){
+        if(isset($data["ip_list"]) == false){
             throw new Exception($data['errmsg'],$data['errcode']);
         }
 

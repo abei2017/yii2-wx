@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace abei2017\wx\mp\user;
 
@@ -8,8 +16,8 @@ use abei2017\wx\core\Exception;
 
 /**
  * 备注助手
- *
  * @author abei<abei@nai8.me>
+ * @link https://nai8.me/yii2wx
  * @package abei2017\wx\mp\user
  */
 class Remark extends Driver {
@@ -37,10 +45,7 @@ class Remark extends Driver {
      */
     public function update($openId,$remark){
         $this->httpClient->formatters = ['uncodeJson'=>'abei2017\wx\helpers\JsonFormatter'];
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_UPDATE_REMARK_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['openid'=>$openId,'remark'=>$remark])
+        $response = $this->post(self::API_UPDATE_REMARK_URL."?access_token={$this->accessToken}",['openid'=>$openId,'remark'=>$remark])
             ->setFormat('uncodeJson')->send();
 
         $data = $response->getData();

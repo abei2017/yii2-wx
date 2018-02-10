@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace abei2017\wx\mp\user;
 
@@ -81,7 +89,6 @@ class Tag extends Driver {
 
     public function init(){
         parent::init();
-
         $this->accessToken = (new AccessToken(['conf'=>$this->conf,'httpClient'=>$this->httpClient,'extra'=>[]]))->getToken();
     }
 
@@ -92,11 +99,7 @@ class Tag extends Driver {
      * @throws Exception
      */
     public function create($tag = []){
-
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_CREATE_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['tag'=>$tag])
+        $response = $this->post(self::API_CREATE_URL."?access_token={$this->accessToken}",['tag'=>$tag])
             ->setFormat(Client::FORMAT_JSON)->send();
 
         $data = $response->getData();
@@ -112,10 +115,7 @@ class Tag extends Driver {
      * @return mixed
      */
     public function ls(){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_LIST_URL."?access_token={$this->accessToken}")
-            ->setMethod('get')
-            ->send();
+        $response = $this->get(self::API_LIST_URL."?access_token={$this->accessToken}")->send();
 
         $data = $response->getData();
         return $data['tags'];
@@ -129,11 +129,9 @@ class Tag extends Driver {
      * @throws Exception
      */
     public function update($tagId,$newName){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_UPDATE_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['tag'=>['id'=>$tagId,'name'=>$newName]])
-            ->setFormat(Client::FORMAT_JSON)->send();
+        $response = $this->post(self::API_UPDATE_URL."?access_token={$this->accessToken}",[
+            'tag'=>['id'=>$tagId,'name'=>$newName]
+        ])->setFormat(Client::FORMAT_JSON)->send();
 
         $data = $response->getData();
         if(isset($data['errcode']) && $data['errcode'] !== 0){
@@ -150,11 +148,9 @@ class Tag extends Driver {
      * @throws Exception
      */
     public function delete($tagId){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_DELETE_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['tag'=>['id'=>$tagId]])
-            ->setFormat(Client::FORMAT_JSON)->send();
+        $response = $this->post(self::API_DELETE_URL."?access_token={$this->accessToken}",[
+            'tag'=>['id'=>$tagId]
+        ])->setFormat(Client::FORMAT_JSON)->send();
 
         $data = $response->getData();
         if(isset($data['errcode']) && $data['errcode'] !== 0){
@@ -172,10 +168,7 @@ class Tag extends Driver {
      * @throws Exception
      */
     public function followers($tagId,$nextOpenId = ""){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_FOLLOWERS_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['tagid'=>$tagId,'next_openid'=>$nextOpenId])
+        $response = $this->post(self::API_FOLLOWERS_URL."?access_token={$this->accessToken}",['tagid'=>$tagId,'next_openid'=>$nextOpenId])
             ->setFormat(Client::FORMAT_JSON)->send();
 
         $data = $response->getData();
@@ -187,10 +180,7 @@ class Tag extends Driver {
      * 目前支持公众号为用户打上最多20个标签。
      */
     public function batchTagToUser($openIds,$tagId){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_BATCH_TAG_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['openid_list'=>$openIds,'tag_id'=>$tagId])
+        $response = $this->post(self::API_BATCH_TAG_URL."?access_token={$this->accessToken}",['openid_list'=>$openIds,'tag_id'=>$tagId])
             ->setFormat(Client::FORMAT_JSON)->send();
 
         $data = $response->getData();
@@ -206,10 +196,7 @@ class Tag extends Driver {
      * 批量为用户取消标签
      */
     public function unBatchTagFromUser($openIds,$tagId){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_UN_BATCH_TAG_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['openid_list'=>$openIds,'tag_id'=>$tagId])
+        $response = $this->post(self::API_UN_BATCH_TAG_URL."?access_token={$this->accessToken}",['openid_list'=>$openIds,'tag_id'=>$tagId])
             ->setFormat(Client::FORMAT_JSON)->send();
 
         $data = $response->getData();
@@ -223,14 +210,12 @@ class Tag extends Driver {
 
     /**
      * 获得一个用户上的标签列表
+     * @param $openId string 用户的openId
+     * @return array
      */
     public function userTags($openId){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_USER_TAGS_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['openid'=>$openId])
+        $response = $this->post(self::API_USER_TAGS_URL."?access_token={$this->accessToken}",['openid'=>$openId])
             ->setFormat(Client::FORMAT_JSON)->send();
-
         $data = $response->getData();
 
         return $data['tagid_list'];

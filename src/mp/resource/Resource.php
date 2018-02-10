@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace abei2017\wx\mp\resource;
 
@@ -10,6 +18,8 @@ use yii\httpclient\Client;
 
 /**
  * 素材助手
+ * @author abei<abei@nai8.me>
+ * @link https://nai8.me/yii2wx
  * @package abei2017\wx\mp\resource
  */
 class Resource extends Driver {
@@ -43,27 +53,24 @@ class Resource extends Driver {
     }
 
     /**
-     * 新增一个
+     * 新增一个临时素材
      * @param $file string 文件路径
      * @param $type string 素材类型
      * @throws Exception
      * @return string
      */
     public function addTempMedia($file,$type = 'image'){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_MEDIA_UPLOAD_URL."?access_token={$this->accessToken}&type={$type}")
-            ->setMethod('post')
-            ->addFile('media', $file)
-            ->send();
+        $response = $this->post(self::API_MEDIA_UPLOAD_URL."?access_token={$this->accessToken}&type={$type}")
+            ->addFile('media', $file)->send();
 
         $response->setFormat(Client::FORMAT_JSON);
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $result = $response->getData();
-        if(isset($result['errcode'])){
-            throw new Exception($result['errmsg']);
+        if(isset($result['errcode']) && $result['errcode'] != 0){
+            throw new Exception($result['errmsg'],$result['errcode']);
         }
 
         return $result['media_id'];
@@ -76,16 +83,10 @@ class Resource extends Driver {
      * @throws Exception
      */
     public function getMedia($mediaId, $savePath = false){
-        $response = $this->httpClient->createRequest()
-            ->setMethod('get')
-            ->setUrl(self::API_MEDIA_GET_URL)
-            ->setData([
-                'access_token'=>$this->accessToken,
-                'media_id'=>$mediaId
-            ])->send();
+        $response = $this->get(self::API_MEDIA_GET_URL,['access_token'=>$this->accessToken,'media_id'=>$mediaId])->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $contentType = $response->getHeaders()->get('content-type');
@@ -112,9 +113,7 @@ class Resource extends Driver {
     }
 
     public function addForeverMedia($file,$type = 'image',$videoForm=[]){
-        $request = $this->httpClient->createRequest()
-            ->setUrl(self::API_FOREVER_MEDIA_UPLOAD_URL."?access_token={$this->accessToken}&type={$type}")
-            ->setMethod('post')
+        $request = $this->post(self::API_FOREVER_MEDIA_UPLOAD_URL."?access_token={$this->accessToken}&type={$type}")
             ->addFile('media', $file);
 
         if($type == 'video'){
@@ -124,7 +123,7 @@ class Resource extends Driver {
 
         $response = $request->send();
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
@@ -140,16 +139,18 @@ class Resource extends Driver {
         }
     }
 
+    /**
+     * 获得一个永久素材
+     * @param $mediaId
+     * @return mixed
+     * @throws Exception
+     */
     public function getForeverMedia($mediaId){
-        $response = $this->httpClient->createRequest()
-            ->setMethod('post')
-            ->setUrl(self::API_FOREVER_MEDIA_UPLOAD_URL."?access_token={$this->accessToken}")
-            ->setData([
-                'media_id'=>$mediaId
-            ])->setFormat(Client::FORMAT_JSON)->send();
+        $response = $this->post(self::API_FOREVER_MEDIA_UPLOAD_URL."?access_token={$this->accessToken}",['media_id'=>$mediaId])
+            ->setFormat(Client::FORMAT_JSON)->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $contentType = $response->getHeaders()->get('content-type');
@@ -177,66 +178,70 @@ class Resource extends Driver {
      * 删除一个永久素材
      */
     public function deleteForeverMedia($mediaId){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_FOREVER_MEDIA_DELETE_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setFormat(Client::FORMAT_JSON)
-            ->setData(['media_id'=>$mediaId])->send();
+        $response = $this->post(self::API_FOREVER_MEDIA_DELETE_URL."?access_token={$this->accessToken}",['media_id'=>$mediaId])
+            ->setFormat(Client::FORMAT_JSON)->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
 
         if(isset($data['errcode']) && $data['errcode'] <> 0){
-            throw new Exception($data['errmsg']);
+            throw new Exception($data['errmsg'],$data['errcode']);
         }
 
         return true;
     }
 
+    /**
+     * 获得永久素材统计数据
+     * @return mixed
+     * @throws Exception
+     */
     public function foreverMediaTotal(){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_FOREVER_MEDIA_TOTAL_URL."?access_token={$this->accessToken}")
-            ->setMethod('get')
-            ->send();
+        $response = $this->get(self::API_FOREVER_MEDIA_TOTAL_URL."?access_token={$this->accessToken}")->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
 
         if(isset($data['errcode']) && $data['errcode'] <> 0){
-            throw new Exception($data['errmsg']);
+            throw new Exception($data['errmsg'],$data['errcode']);
         }
 
         return $data;
     }
 
+    /**
+     * 获得永久素材列表
+     *
+     * @param string $type
+     * @param int $offset
+     * @param int $count
+     * @return mixed
+     * @throws Exception
+     */
     public function foreverMediaList($type = 'image', $offset = 0, $count = 20){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_FOREVER_MEDIA_LIST_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData([
-                'type'=>$type,
-                'offset'=>$offset,
-                'count'=>$count
-            ])
-            ->setFormat(Client::FORMAT_JSON)->send();
+        $response = $this->post(self::API_FOREVER_MEDIA_LIST_URL."?access_token={$this->accessToken}",[
+            'type'=>$type,
+            'offset'=>$offset,
+            'count'=>$count
+        ])->setFormat(Client::FORMAT_JSON)->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
 
         if(isset($data['errcode']) && $data['errcode'] <> 0){
-            throw new Exception($data['errmsg']);
+            throw new Exception($data['errmsg'],$data['errcode']);
         }
 
         return $data;
@@ -249,14 +254,10 @@ class Resource extends Driver {
      * @throws Exception
      */
     public function addNews($articles = []){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_NEWS_ADD_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setData(['articles'=>$articles])
-            ->setFormat(Client::FORMAT_JSON)->send();
+        $response = $this->post(self::API_NEWS_ADD_URL."?access_token={$this->accessToken}",['articles'=>$articles])->setFormat(Client::FORMAT_JSON)->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
@@ -267,14 +268,11 @@ class Resource extends Driver {
     }
 
     public function uploadImgInNews($file){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_MEDIA_UPLOADIMG_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->addFile('media', $file)
-            ->send();
+        $response = $this->post(self::API_MEDIA_UPLOADIMG_URL."?access_token={$this->accessToken}")
+            ->addFile('media', $file)->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
@@ -284,15 +282,12 @@ class Resource extends Driver {
     }
 
     public function updateNews($mediaId,$index,$article){
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_UPDATE_NEWS_URL."?access_token={$this->accessToken}")
-            ->setMethod('post')
-            ->setFormat(Client::FORMAT_JSON)
-            ->setData(['media_id'=>$mediaId,'index'=>$index,'articles'=>$article])
-            ->send();
+        $response = $this->post(self::API_UPDATE_NEWS_URL."?access_token={$this->accessToken}",[
+            'media_id'=>$mediaId, 'index'=>$index, 'articles'=>$article
+        ])->setFormat(Client::FORMAT_JSON)->send();
 
         if($response->isOk == false){
-            throw new Exception('网络问题，没有得到服务器响应。');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);

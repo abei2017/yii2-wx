@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the abei2017/yii2-mini-program.
+ * This file is part of the abei2017/yii2-wx
  *
  * (c) abei <abei@nai8.me>
  *
@@ -9,6 +9,9 @@
  */
 
 namespace abei2017\wx\mini\payment;
+
+use abei2017\wx\core\Exception;
+use abei2017\wx\helpers\Util;
 
 /**
  * Notify API.
@@ -56,45 +59,15 @@ class Notify {
             $this->getData();
         }
 
-        $sign = $this->makeSign();
+        $sign = Util::makeSign($this->data,$this->merchant['key']);
         if($this->GetSign() == $sign){
             return true;
         }
-        throw new PayException("签名错误！");
+        throw new Exception("签名错误！");
     }
 
     public function GetSign(){
         return $this->data['sign'];
     }
 
-    protected function makeSign(){
-        $data = $this->data;
-        unset($data['sign']);
-
-        $params = [];
-        foreach ($data as $k => $v)
-        {
-            $params[$k] = $v;
-        }
-        //签名步骤一：按字典序排序参数
-        ksort($params);
-        $String = $this->toUrlParams($params);
-        $String = $String."&key=".$this->merchant['key'];
-        $String = md5($String);
-        $result_ = strtoupper($String);
-        return $result_;
-    }
-
-    private function toUrlParams($vals){
-        $buff = "";
-        foreach ($vals as $k => $v)
-        {
-            if($k != "sign" && $v != "" && !is_array($v)){
-                $buff .= $k . "=" . $v . "&";
-            }
-        }
-
-        $buff = trim($buff, "&");
-        return $buff;
-    }
 }

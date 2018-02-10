@@ -1,7 +1,12 @@
 <?php
 
-/**
- * XML.php.
+/*
+ * This file is part of the abei2017/yii2-wx.
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace abei2017\wx\helpers;
@@ -9,40 +14,22 @@ namespace abei2017\wx\helpers;
 use SimpleXMLElement;
 
 /**
- * Class XML.
+ * Xml
+ * xml格式的解析和构建类
+ *
+ * @author abei<abei@nai8.me>
+ * @link https://nai8.me/yii2wx
+ * @package abei2017\wx\helpers
  */
-class Xml
-{
-    /**
-     * XML to array.
-     *
-     * @param string $xml XML string
-     *
-     * @return array|\SimpleXMLElement
-     */
-    public static function parse($xml)
-    {
+class Xml {
+
+    public static function parse($xml) {
+
         return self::normalize(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS));
     }
 
-    /**
-     * XML encode.
-     *
-     * @param mixed  $data
-     * @param string $root
-     * @param string $item
-     * @param string $attr
-     * @param string $id
-     *
-     * @return string
-     */
-    public static function build(
-        $data,
-        $root = 'xml',
-        $item = 'item',
-        $attr = '',
-        $id = 'id'
-    ) {
+    public static function build($data, $root = 'xml', $item = 'item', $attr = '', $id = 'id'){
+
         if (is_array($attr)) {
             $_attr = [];
 
@@ -62,28 +49,13 @@ class Xml
         return $xml;
     }
 
-    /**
-     * Build CDATA.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    public static function cdata($string)
-    {
+    public static function cdata($string){
+
         return sprintf('<![CDATA[%s]]>', $string);
     }
 
-    /**
-     * Object to array.
-     *
-     *
-     * @param SimpleXMLElement $obj
-     *
-     * @return array
-     */
-    protected static function normalize($obj)
-    {
+    protected static function normalize($obj) {
+
         $result = null;
 
         if (is_object($obj)) {
@@ -106,17 +78,8 @@ class Xml
         return $result;
     }
 
-    /**
-     * Array to XML.
-     *
-     * @param array  $data
-     * @param string $item
-     * @param string $id
-     *
-     * @return string
-     */
-    protected static function data2Xml($data, $item = 'item', $id = 'id')
-    {
+    protected static function data2Xml($data, $item = 'item', $id = 'id') {
+
         $xml = $attr = '';
 
         foreach ($data as $key => $val) {

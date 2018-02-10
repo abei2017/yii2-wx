@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the abei2017/yii2-wx
  *
@@ -7,16 +8,18 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace abei2017\wx\core;
 
 use Yii;
-use yii\base\Exception;
+use yii\httpclient\Client;
 
 /**
- * Class AccessToken
+ * AccessToken
  * 获取微信AccessToken接口类
+ *
  * @link http://nai8.me
- * @package abei2017\wx\accessToken
+ * @package abei2017\wx\core\accessToken
  * @author abei<abei@nai8.me>
  */
 class AccessToken extends Driver {
@@ -56,20 +59,22 @@ class AccessToken extends Driver {
      *
      * @return mixed
      * @author abei<abei@nai8.me>
-     * @throws Exception
+     * @throws \abei2017\wx\core\Exception
      */
     public function getTokenFromServer(){
         $params = [
             'grant_type'=>'client_credential',
             'appid'=>$this->conf['app_id'],
-            'secret'=>$this->conf['secret'],
+            'secret'=>$this->conf['secret']
         ];
 
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_TOKEN_GET)
-            ->setMethod('get')
-            ->setData($params)->send();
+        $response = $this->get(self::API_TOKEN_GET,$params)->send();
 
+        if($response->isOk == false){
+            throw new Exception(self::ERROR_NO_RESPONSE);
+        }
+
+        $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
         if(!isset($data['access_token'])){
             throw new Exception($data['errmsg'],$data['errcode']);

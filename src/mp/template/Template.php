@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace abei2017\wx\mp\template;
 
@@ -10,6 +18,8 @@ use yii\httpclient\Client;
 /**
  * 模板消息助手
  * @package abei2017\wx\mp\template
+ * @author abei<abei@nai8.me>
+ * @link https://nai8.me/yii2wx
  */
 class Template extends Driver {
 
@@ -46,16 +56,13 @@ class Template extends Driver {
             'data'=>$formatData
         ];
 
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_SEND_TEMPLATE_URL."?access_token=".$this->accessToken)
-            ->setMethod('post')
-            ->setData($params)
+        $response = $this->post(self::API_SEND_TEMPLATE_URL."?access_token=".$this->accessToken,$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
         $data = $response->setFormat(Client::FORMAT_JSON)->getData();
 
         if(isset($data['errcode']) && $data['errcode'] != 0){
-            throw new Exception($data['errmsg']);
+            throw new Exception($data['errmsg'],$data['errcode']);
         }
 
         return $data['msgid'];

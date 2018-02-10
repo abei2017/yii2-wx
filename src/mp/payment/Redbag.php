@@ -1,11 +1,28 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace abei2017\wx\mp\payment;
 
 use Yii;
 use abei2017\wx\core\Driver;
 use yii\httpclient\Client;
 use abei2017\wx\core\Exception;
+use abei2017\wx\helpers\Util;
 
+/**
+ * Redbag
+ * 现金红包接口
+ * @package abei2017\wx\mp\payment
+ * @link https://nai8.me/yii2wx
+ * @author abei<abei@nai8.me>
+ */
 class Redbag extends Driver {
 
     /**
@@ -47,28 +64,20 @@ class Redbag extends Driver {
         }
 
         $params = array_merge($params,$conf);
-        $params['sign'] = $this->makeSign($params);
+        $params['sign'] = Util::makeSign($params,$this->conf['payment']['key']);
 
-        $certs = [
-            'SSLCERT' => $this->conf['payment']['cert_path'],
-            'SSLKEY' => $this->conf['payment']['key_path'],
+        $options = [
+            CURLOPT_SSLCERTTYPE=>'PEM',
+            CURLOPT_SSLCERT=>$this->conf['payment']['cert_path'],
+            CURLOPT_SSLKEYTYPE=>'PEM',
+            CURLOPT_SSLKEY=>$this->conf['payment']['key_path'],
         ];
 
-        $response = $this->httpClient->createRequest()
-            ->setUrl($type == 'normal' ? self::API_SEND_NORMAl_URL : self::API_SEND_GROUP_URL)
-            ->setMethod('post')
-            ->setData($params)
-            ->setFormat(Client::FORMAT_XML)
-            ->setOptions([
-                CURLOPT_SSLCERTTYPE=>'PEM',
-                CURLOPT_SSLCERT=>$certs['SSLCERT'],
-                CURLOPT_SSLKEYTYPE=>'PEM',
-                CURLOPT_SSLKEY=>$certs['SSLKEY'],
-            ])
-            ->send();
+        $response = $this->post($type == 'normal' ? self::API_SEND_NORMAl_URL : self::API_SEND_GROUP_URL,$params,[],$options)
+            ->setFormat(Client::FORMAT_XML)->send();
 
         if($response->isOk == false){
-            throw new Exception('无响应');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_XML);
@@ -88,6 +97,8 @@ class Redbag extends Driver {
     /**
      * 获取一个红包信息
      * @param $mchBillno string 商户订单号
+     * @throws Exception
+     * @return object
      */
     public function query($mchBillno){
         $params = [
@@ -97,28 +108,19 @@ class Redbag extends Driver {
             'bill_type'=>'MCHT',
             'nonce_str'=>Yii::$app->security->generateRandomString(32)
         ];
-        $params['sign'] = $this->makeSign($params);
+        $params['sign'] = Util::makeSign($params,$this->conf['payment']['key']);
 
-        $certs = [
-            'SSLCERT' => $this->conf['payment']['cert_path'],
-            'SSLKEY' => $this->conf['payment']['key_path'],
+        $options = [
+            CURLOPT_SSLCERTTYPE=>'PEM',
+            CURLOPT_SSLCERT=>$this->conf['payment']['cert_path'],
+            CURLOPT_SSLKEYTYPE=>'PEM',
+            CURLOPT_SSLKEY=>$this->conf['payment']['key_path'],
         ];
 
-        $response = $this->httpClient->createRequest()
-            ->setUrl(self::API_QUERY_URL)
-            ->setMethod('post')
-            ->setData($params)
-            ->setFormat(Client::FORMAT_XML)
-            ->setOptions([
-                CURLOPT_SSLCERTTYPE=>'PEM',
-                CURLOPT_SSLCERT=>$certs['SSLCERT'],
-                CURLOPT_SSLKEYTYPE=>'PEM',
-                CURLOPT_SSLKEY=>$certs['SSLKEY'],
-            ])
-            ->send();
-
+        $response = $this->post(self::API_QUERY_URL,$params,[],$options)
+            ->setFormat(Client::FORMAT_XML)->send();
         if($response->isOk == false){
-            throw new Exception('无响应');
+            throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_XML);
@@ -133,24 +135,5 @@ class Redbag extends Driver {
         }
 
         return $result;
-    }
-
-    private function makeSign($params){
-        ksort($params);
-        $str = $this->toUrlParams($params);
-        $str .= "&key=".$this->conf['payment']['key'];
-        return strtoupper(md5($str));
-    }
-
-    private function toUrlParams($vals){
-        $buff = "";
-        foreach($vals as $k=>$v){
-            if($k != "sign" && $v != "" && is_array($v) == false){
-                $buff .= $k . "=" . $v . "&";
-            }
-        }
-
-        $buff = trim($buff,"&");
-        return $buff;
     }
 }

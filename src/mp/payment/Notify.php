@@ -1,12 +1,34 @@
 <?php
+/*
+ * This file is part of the abei2017/yii2-wx
+ *
+ * (c) abei <abei@nai8.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace abei2017\wx\mp\payment;
 
 use yii\base\Component;
 use abei2017\wx\helpers\Xml;
+use abei2017\wx\helpers\Util;
+use abei2017\wx\core\Exception;
 
+/**
+ * Notify
+ * 微信支付通知类
+ *
+ * @author abei<abei@nai8.me>
+ * @link http://nai8.me/yii2wx
+ * @package abei2017\wx\mp\payment
+ */
 class Notify extends Component {
 
+    /**
+     * 收到的通知（数组形式）
+     * @var
+     */
     protected $notify;
 
     public $merchant;
@@ -26,40 +48,11 @@ class Notify extends Component {
             $this->getData();
         }
 
-        $sign = $this->makeSign();
+        $sign = Util::makeSign($this->data,$this->merchant['key']);
         if($sign != $this->data['sign']){
-            throw new PayException("签名错误！");
+            throw new Exception("签名错误！");
         }
 
         return true;
-    }
-
-    protected function makeSign(){
-        $data = $this->data;
-        unset($data['sign']);
-
-        $params = [];
-        foreach($data as $k=>$v){
-            $params[$k] = $v;
-        }
-
-        ksort($params);
-        $str = $this->toUrlParams($params);
-        $str .= "&key=".$this->merchant['key'];
-        $str = md5($str);
-
-        return strtoupper($str);
-    }
-
-    private function toUrlParams($vals){
-        $buff = "";
-        foreach($vals as $k=>$v){
-            if($k != "sign" && $v != "" && is_array($v) == false){
-                $buff .= $k . "=" . $v . "&";
-            }
-        }
-
-        $buff = trim($buff,"&");
-        return $buff;
     }
 }
