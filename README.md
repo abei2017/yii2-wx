@@ -11,7 +11,6 @@
     <img class="total_img" src="https://poser.pugx.org/abei2017/yii2-wx/downloads">
     <img class="latest_unstable_version_img" src="https://poser.pugx.org/abei2017/yii2-wx/v/unstable">
     <img class="license_img" src="https://poser.pugx.org/abei2017/yii2-wx/license">
-    <img class="composer_img" src="/phpunit/phpunit/composerlock">
 </p>
 
 <hr/>

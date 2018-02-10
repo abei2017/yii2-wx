@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "abei2017\\wx\\": ""
+            "abei2017\\wx\\": "src"
         }
     }
 }
