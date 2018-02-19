@@ -95,12 +95,13 @@ class Tag extends Driver {
     /**
      * 生成一组标签
      * 每次创建一个，最多只能创建100个标签。
-     * @param $tag array 要建立的标签
+     * @param $tag string 要建立的标签
      * @throws Exception
      */
-    public function create($tag = []){
-        $response = $this->post(self::API_CREATE_URL."?access_token={$this->accessToken}",['tag'=>$tag])
-            ->setFormat(Client::FORMAT_JSON)->send();
+    public function create($tag){
+        $this->httpClient->formatters = ['uncodeJson'=>'abei2017\wx\helpers\JsonFormatter'];
+        $response = $this->post(self::API_CREATE_URL."?access_token={$this->accessToken}",['tag'=>['name'=>$tag]])
+            ->setFormat('uncodeJson')->send();
 
         $data = $response->getData();
         if(isset($data['errcode'])){
@@ -129,9 +130,10 @@ class Tag extends Driver {
      * @throws Exception
      */
     public function update($tagId,$newName){
+        $this->httpClient->formatters = ['uncodeJson'=>'abei2017\wx\helpers\JsonFormatter'];
         $response = $this->post(self::API_UPDATE_URL."?access_token={$this->accessToken}",[
             'tag'=>['id'=>$tagId,'name'=>$newName]
-        ])->setFormat(Client::FORMAT_JSON)->send();
+        ])->setFormat('uncodeJson')->send();
 
         $data = $response->getData();
         if(isset($data['errcode']) && $data['errcode'] !== 0){
