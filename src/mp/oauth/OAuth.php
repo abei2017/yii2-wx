@@ -83,6 +83,20 @@ class OAuth extends Driver {
         $this->openId = $data['openid'];
     }
 
+    /**
+     * 获得web授权的access token和openId
+     * @return bool
+     */
+    public function getOpenId(){
+        if($this->openId){
+            return $this->openId;
+        }
+
+        $this->initAccessToken();
+
+        return $this->openId;
+    }
+
     protected function getCode(){
         if($this->code == false){
             $this->code = Yii::$app->request->get('code');
