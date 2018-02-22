@@ -32,6 +32,9 @@
     除了代码，还有诗和远方。扫码关注我的公众号。
 </p>
 
+## 文档
+- [中文文档](http://nai8.me/wiki/index.html?id=1)
+
 ## 系统需求（Requirement）
 - PHP >= 5.4
 - Composer
@@ -131,7 +134,7 @@ $data = $qrcode->intTemp(3600,9527);// 生成一个数字类临时二维码，�
 如果你是一名yii2或微信接口开发的初学者，我在自己的知识分享设置了一套针对性的视频课程（<a href="http://nai8.me/book/view.html?id=24" target="_blank">点击查看</a>），我想能让你零起步。
 
 ## 支持（Support）
-- [yii2-wx速查表](https://nai8.me/tool/sc.html?id=2)
+- [文档](http://nai8.me/wiki/index.html?id=1)
 - [社区交流](https://nai8.me/forum/index.html?tags=108)
 - [微信交流群](https://nai8.me/site/qun.html)
 

@@ -13,6 +13,7 @@ namespace abei2017\wx\mini\qrcode;
 use abei2017\wx\core\Driver;
 use yii\httpclient\Client;
 use abei2017\wx\core\AccessToken;
+use abei2017\wx\core\Exception;
 
 /**
  * Qrcode
@@ -37,16 +38,53 @@ class Qrcode extends Driver {
     }
 
     /**
-     * 生成一个不限制的二维码
+     * 生成一个不限制的小程序码
      * @param $scene
-     * @param $page
+     * @param $page string 路径，不能带阐述
      * @param array $extra
+     * @throws Exception
      * @return \yii\httpclient\Request;
      */
     public function unLimit($scene,$page,$extra = []){
         $params = array_merge(['scene'=>$scene,'page'=>$page],$extra);
         $response = $this->post(self::API_UN_LIMIT_CREATE."?access_token=".$this->accessToken,$params)
             ->setFormat(Client::FORMAT_JSON)->send();
+
+        if($response->isOk == false){
+            throw new Exception(self::ERROR_NO_RESPONSE);
+        }
+
+        $contentType = $response->getHeaders()->get('content-type');
+        if(strpos($contentType,'json') != false){
+            $data = $response->getData();
+            if(isset($data['errcode'])){
+                throw new Exception($data['errmsg'],$data['errcode']);
+            }
+        }
+
+        return $response->getContent();
+    }
+
+    /**
+     * 生成永久小程序码
+     * 数量有限
+     */
+    public function forever($path,$extra = []){
+        $params = array_merge(['path'=>$path],$extra);
+        $response = $this->post(self::API_CREATE."?access_token=".$this->accessToken,$params)
+            ->setFormat(Client::FORMAT_JSON)->send();
+
+        if($response->isOk == false){
+            throw new Exception(self::ERROR_NO_RESPONSE);
+        }
+
+        $contentType = $response->getHeaders()->get('content-type');
+        if(strpos($contentType,'json') != false){
+            $data = $response->getData();
+            if(isset($data['errcode'])){
+                throw new Exception($data['errmsg'],$data['errcode']);
+            }
+        }
 
         return $response->getContent();
     }

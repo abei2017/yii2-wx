@@ -78,7 +78,7 @@ class Pay extends Driver {
      * 转换短地址
      * @const
      */
-    const API_SHORT_URL_URL = 'https://api.mch.weixin.qq.com/tools/shorturl';
+    const API_SHORT_URL_URL = 'https://api.mch.weixin.qq.com/tools/ ';
 
     private $prepare;
 
@@ -131,7 +131,7 @@ class Pay extends Driver {
     }
 
     /**
-     * 原始扫码登录
+     * 原始扫码支付
      * @param $attributes array 原始扫码需要的参数
      * @return object
      */
@@ -180,7 +180,7 @@ class Pay extends Driver {
      * @param $attributes array JSSDK支付需要的参数
      * @return object
      */
-    public function js($attributes = []){
+     public function js($attributes = []){
         $attributes['trade_type'] = 'JSAPI';
         $result = $this->prepare($attributes);
         return $result;
