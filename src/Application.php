@@ -20,7 +20,8 @@ use yii\httpclient\Client;
  * bootstrap
  * 此类负责模块其他类的驱动以及相关变量的初始化
  *
- * @link https://nai8.me
+ * @link https://nai8.me/yii2wx
+ * @author abei<abei@nai8.me>
  * @package abei2017\wx
  */
 class Application extends Component {

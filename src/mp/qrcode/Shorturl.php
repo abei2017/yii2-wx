@@ -11,7 +11,7 @@
 namespace abei2017\wx\mp\qrcode;
 
 use abei2017\wx\core\Driver;
-use abei2017\wx\AccessToken;
+use abei2017\wx\core\AccessToken;
 use yii\httpclient\Client;
 
 /**
