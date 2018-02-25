@@ -11,6 +11,7 @@
 
 namespace abei2017\wx;
 
+use abei2017\wx\core\Exception;
 use Yii;
 use yii\base\Component;
 use yii\httpclient\Client;
@@ -89,6 +90,7 @@ class Application extends Component {
      *
      * @param $api string 类的映射名
      * @param array $extra  附加参数
+     * @throws Exception
      * @return object
      */
     public function driver($api,$extra = []){
@@ -97,6 +99,10 @@ class Application extends Component {
             'httpClient'=>$this->httpClient,
             'extra'=>$extra,
         ];
+
+        if(empty($api) OR isset($this->classMap[$api]) == false){
+            throw new Exception('很抱歉，你输入的API不合法。');
+        }
 
         $config['class'] = $this->classMap[$api];
 
