@@ -15,6 +15,7 @@ use Yii;
 use abei2017\wx\core\Driver;
 use yii\base\Exception;
 use abei2017\wx\mp\message\Text;
+use abei2017\wx\mp\encryptor\Encryptor;
 
 /**
  * 服务器类
@@ -28,11 +29,18 @@ class Server extends Driver {
 
     const ALL_MSG = 1049598;
 
+    protected $encryptor;
+
     protected $messageHandler;
 
     protected $messageFilter;
 
     protected $encodingAESKey;
+
+    public function init() {
+        parent::init();
+        $this->encryptor = (new Encryptor(['conf'=>$this->conf,'httpClient'=>$this->httpClient]));
+    }
 
     /**
      * 发送响应
@@ -130,7 +138,16 @@ class Server extends Driver {
     }
 
     protected function parseMessageInRequest($content = null){
-        $message = Xml::parse($content);
+        if($this->conf['safeMode'] > 0){
+            $message = $this->encryptor->decryptMsg(
+                Yii::$app->request->get('msg_signature'),
+                Yii::$app->request->get('nonce'),
+                Yii::$app->request->get('timestamp'),
+                $content
+            );
+        }else{
+            $message = Xml::parse($content);
+        }
 
         return $message;
     }
@@ -146,6 +163,14 @@ class Server extends Driver {
         }
 
         $response = $this->buildReply($to, $from, $message);
+
+        if($this->conf['safeMode'] > 0){
+            $response = $this->encryptor->encryptMsg(
+                $response,
+                Yii::$app->request->get('nonce'),
+                Yii::$app->request->get('timestamp')
+            );
+        }
 
         return $response;
     }
