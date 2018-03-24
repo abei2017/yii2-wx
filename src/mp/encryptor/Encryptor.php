@@ -11,6 +11,7 @@
 
 namespace abei2017\wx\mp\encryptor;
 
+use Yii;
 use abei2017\wx\core\Driver;
 use abei2017\wx\core\Exception;
 use abei2017\wx\helpers\Xml;
@@ -59,6 +60,7 @@ class Encryptor extends Driver {
 
         return sha1(implode($arr));
     }
+
 
     private function encrypt($text, $appId)
     {
@@ -111,6 +113,11 @@ class Encryptor extends Driver {
         return base64_decode($this->conf['encodingAESKey']."=",true);
     }
 
+    /**
+     * 对内容进行解码
+     * @param $decrypted
+     * @return bool|string
+     */
     public function decode($decrypted){
         $pad = ord(substr($decrypted,-1));
         if($pad < 1 || $pad > $this->blockSize){
@@ -120,6 +127,11 @@ class Encryptor extends Driver {
         return substr($decrypted,0,(strlen($decrypted) - $pad));
     }
 
+    /**
+     * 对内容进行编码
+     * @param $text
+     * @return string
+     */
     public function encode($text)
     {
         $padAmount = $this->blockSize - (strlen($text) % $this->blockSize);
@@ -132,26 +144,11 @@ class Encryptor extends Driver {
         return $text.$tmp;
     }
 
-
-    private function getRandomStr()
-    {
-        return substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'), 0, 16);
+    /**
+     * 生成16位的随机字符串
+     * @return bool|string
+     */
+    private function getRandomStr(){
+        return Yii::$app->security->generateRandomString(16);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
