@@ -140,6 +140,17 @@ class Pay extends Driver {
         $result = $this->prepare($attributes);
         return $result;
     }
+    
+     /**
+     * APP支付
+     * @param $attributes array
+     * @return object
+     */
+    public function app($attributes = []){
+        $attributes['trade_type'] = 'APP';
+        $result = $this->prepare($attributes);
+        return $result;
+    }
 
     public function nativeDefinedQrcode($productId){
         $params = [
