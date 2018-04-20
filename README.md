@@ -136,7 +136,7 @@ $data = $qrcode->intTemp(3600,9527);// 生成一个数字类临时二维码，�
 ## 支持（Support）
 - [文档](http://nai8.me/wiki/index.html?id=1)
 - [社区交流](https://nai8.me/forum/index.html?tags=108)
-- [微信交流群](https://nai8.me/site/qun.html)
+- [微信交流群](https://nai8.me/images/qun.jpg)
 
 更多请参考 https://nai8.me/yii2wx
 
