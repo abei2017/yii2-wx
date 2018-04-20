@@ -45,6 +45,9 @@ class Notify {
         }
 
         $xml = @$GLOBALS['HTTP_RAW_POST_DATA'];
+        if(!$xml){
+        	$xml = file_get_contents("php://input");
+        }
         $xmlArray = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
 
         return $this->data = $xmlArray;
