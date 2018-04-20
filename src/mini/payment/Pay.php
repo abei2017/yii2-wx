@@ -16,6 +16,7 @@ use yii\base\Response;
 use abei2017\wx\core\Exception;
 use yii\httpclient\Client;
 use abei2017\wx\helpers\Util;
+use abei2017\wx\helpers\Xml;
 
 /**
  * Pay.
@@ -130,7 +131,7 @@ class Pay extends Driver {
             ];
         }
 
-
+        return Xml::build($response);
     }
 
     public function getNotify(){
