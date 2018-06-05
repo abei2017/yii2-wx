@@ -139,5 +139,8 @@ $data = $qrcode->intTemp(3600,9527);// 生成一个数字类临时二维码，�
 
 更多请参考 https://nai8.me/lang-7.html
 
+## 一些有用的帖子
+- [在yii2-wx中如何正确的使用try....catch....](https://nai8.me/forum/detail.html?id=121)
+
 ## 开源协议（License）
 MIT
