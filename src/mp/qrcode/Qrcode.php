@@ -68,7 +68,8 @@ class Qrcode extends Driver {
             throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
-        $data = $response->setFormat(Client::FORMAT_JSON);
+        $response->setFormat(Client::FORMAT_JSON);
+        $data = $response->getData();
         if(isset($data['errcode'])){
             throw new Exception("{$data['errcode']}#{$data['errmsg']}");
         }
@@ -111,7 +112,8 @@ class Qrcode extends Driver {
             throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
-        $data = $response->setFormat(Client::FORMAT_JSON);
+        $response->setFormat(Client::FORMAT_JSON);
+        $data = $response->getData();
         if(isset($data['errcode'])){
             throw new Exception("{$data['errcode']}#{$data['errmsg']}");
         }
