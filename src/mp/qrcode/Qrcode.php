@@ -18,14 +18,14 @@ use yii\httpclient\Client;
  * Qrcode
  * 二维码生成接口
  * @package abei2017\wx\mp\qrcode
- * @link https://nai8.me/yii2wx
+ * @link https://nai8.me/lang-7.html
  * @author abei<abei@nai8.me>
  */
 class Qrcode extends Driver {
 
     private $accessToken;
 
-    //  生成临时二维码
+    //  接口地址
     const API_QRCODE_URL = 'https://api.weixin.qq.com/cgi-bin/qrcode/create';
 
     public function init()
@@ -51,12 +51,29 @@ class Qrcode extends Driver {
     }
 
     private function temp($action = 'QR_SCENE', $seconds = 2592000, $scene = ['scene_id'=>0]){
+        if((int)$seconds > 2592000){
+            throw new Exception('临时二维码有效期最多只能2592000秒（30天）');
+        }
+
+        if((int)$seconds <= 0){
+            //  如果填写不正确则默认为60秒，这样做主要是适配一些扫码登录功能。by abei
+            $seconds = 60;
+        }
+
         $params = array_merge(['expire_seconds'=>$seconds,'action_name'=>$action,'action_info'=>['scene'=>$scene]]);
         $response = $this->post(Qrcode::API_QRCODE_URL."?access_token={$this->accessToken}",$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
-        $response->setFormat(Client::FORMAT_JSON);
-        return $response->getData();
+        if($response->isOk == false){
+            throw new Exception(self::ERROR_NO_RESPONSE);
+        }
+
+        $data = $response->setFormat(Client::FORMAT_JSON);
+        if(isset($data['errcode'])){
+            throw new Exception("{$data['errcode']}#{$data['errmsg']}");
+        }
+
+        return $data;
     }
 
     /**
@@ -77,12 +94,28 @@ class Qrcode extends Driver {
         return $this->forver('QR_LIMIT_STR_SCENE',['scene_str'=>$val]);
     }
 
+    /**
+     * 生成永久二维码
+     * @param string $action
+     * @param array $scene
+     * @return mixed
+     */
     private function forver($action = 'QR_LIMIT_SCENE', $scene = ['scene_id'=>0]){
         $params = array_merge(['action_name'=>$action,'action_info'=>['scene'=>$scene]]);
         $response = $this->post(Qrcode::API_QRCODE_URL."?access_token={$this->accessToken}",$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
         $response->setFormat(Client::FORMAT_JSON);
-        return $response->getData();
+
+        if($response->isOk == false){
+            throw new Exception(self::ERROR_NO_RESPONSE);
+        }
+
+        $data = $response->setFormat(Client::FORMAT_JSON);
+        if(isset($data['errcode'])){
+            throw new Exception("{$data['errcode']}#{$data['errmsg']}");
+        }
+
+        return $data;
     }
 }
