@@ -11,6 +11,7 @@
 
 namespace abei2017\wx\core;
 
+use abei2017\wx\helpers\Util;
 use yii\base\Component;
 
 /**
@@ -53,4 +54,11 @@ class Driver extends Component {
     protected function post($url,$params = [], $headers = [], $options = []){
         return $this->httpClient->post($url,$params,$headers,$options);
     }
+
+    protected function console($content){
+        if(isset($this->conf['console']) && $this->conf['console'] === true){
+            Util::outConsole($content);
+        }
+    }
+
 }
