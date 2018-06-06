@@ -16,7 +16,7 @@ namespace abei2017\wx\helpers;
  * 该formatter主要是在数据进行json_encode时对其中的汉字内容不进行编码
  *
  * @author abei<abei@nai8.me>
- * @link https://nai8.me/yii2wx
+ * @link https://nai8.me/lang-7.html
  * @package abei2017\wx\helpers
  */
 class JsonFormatter extends \yii\httpclient\JsonFormatter {

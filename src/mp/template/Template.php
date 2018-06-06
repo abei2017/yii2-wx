@@ -19,7 +19,7 @@ use yii\httpclient\Client;
  * 模板消息助手
  * @package abei2017\wx\mp\template
  * @author abei<abei@nai8.me>
- * @link https://nai8.me/yii2wx
+ * @link https://nai8.me/lang-7.html
  */
 class Template extends Driver {
 
@@ -58,6 +58,10 @@ class Template extends Driver {
 
         $response = $this->post(self::API_SEND_TEMPLATE_URL."?access_token=".$this->accessToken,$params)
             ->setFormat(Client::FORMAT_JSON)->send();
+
+        if($response->isOk == false){
+            throw new Exception(self::ERROR_NO_RESPONSE);
+        }
 
         $data = $response->setFormat(Client::FORMAT_JSON)->getData();
 

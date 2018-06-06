@@ -18,7 +18,7 @@ use yii\httpclient\Client;
  * Qrcode
  * 二维码生成接口
  * @package abei2017\wx\mp\qrcode
- * @link https://nai8.me/lang-7.html
+ * @link https://nai8.me/yii2wx
  * @author abei<abei@nai8.me>
  */
 class Qrcode extends Driver {
@@ -115,7 +115,7 @@ class Qrcode extends Driver {
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
         if(isset($data['errcode'])){
-            throw new Exception("{$data['errcode']}#{$data['errmsg']}");
+            throw new Exception($data['errmsg'],$data['errcode']);
         }
 
         return $data;
