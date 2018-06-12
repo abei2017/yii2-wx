@@ -55,10 +55,5 @@ class Driver extends Component {
         return $this->httpClient->post($url,$params,$headers,$options);
     }
 
-    protected function console($content){
-        if(isset($this->conf['console']) && $this->conf['console'] === true){
-            Util::outConsole($content);
-        }
-    }
 
 }

@@ -34,7 +34,6 @@ class Base extends Driver {
         $access = new AccessToken(['conf'=>$this->conf,'httpClient'=>$this->httpClient]);
         $accessToken = $access->getToken();
 
-        $this->console("Base助手和微信服务器通讯开始 ".__FILE__." ".__LINE__."行");
         $response = $this->get(self::API_BASE_IP_URL,['access_token'=>$accessToken])->send();
 
         $data = $response->getData();

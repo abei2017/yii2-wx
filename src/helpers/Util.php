@@ -46,11 +46,4 @@ class Util extends Component {
         return strtoupper(md5($str));
     }
 
-    static public function outConsole($content){
-
-        $time = date("Y-m-d H:i:s");
-        $consoleString = "【abei2017/yii2-wx】 ".$time." ".$content;
-
-        echo "<script>console.log('".$consoleString."');</script>";
-    }
 }

@@ -45,12 +45,10 @@ class Qrcode extends Driver {
      * @return array
      */
     public function intTemp($seconds = 2592000,$val){
-        $this->console("生成临时二维码（数字类），有效期为{$seconds}秒 ".__FILE__." ".__LINE__."行");
         return $this->temp('QR_SCENE',$seconds,['scene_id'=>$val]);
     }
 
     public function strTemp($seconds = 2592000,$val){
-        $this->console("生成临时二维码（字符串类），有效期为{$seconds}秒 ".__FILE__." ".__LINE__."行");
         return $this->temp('QR_STR_SCENE',$seconds,['scene_str'=>$val]);
     }
 
@@ -66,7 +64,6 @@ class Qrcode extends Driver {
 
         $params = array_merge(['expire_seconds'=>$seconds,'action_name'=>$action,'action_info'=>['scene'=>$scene]]);
 
-        $this->console("Qrcode助手和微信服务器开始通讯 ".__FILE__." ".__LINE__."行");
         $response = $this->post(Qrcode::API_QRCODE_URL."?access_token={$this->accessToken}",$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
@@ -77,7 +74,6 @@ class Qrcode extends Driver {
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
 
-        $this->console("Qrcode助手和微信服务器通讯完毕 ".Json::encode($data)." ".__FILE__." ".__LINE__."行");
         if(isset($data['errcode'])){
             throw new Exception("{$data['errcode']}#{$data['errmsg']}");
         }
@@ -91,7 +87,6 @@ class Qrcode extends Driver {
      * @return mixed
      */
     public function intForver($val){
-        $this->console("生成永久二维码（数字类） ".__FILE__." ".__LINE__."行");
         return $this->forver('QR_LIMIT_SCENE',['scene_id'=>$val]);
     }
 
@@ -101,7 +96,6 @@ class Qrcode extends Driver {
      * @return mixed
      */
     public function strForver($val){
-        $this->console("生成永久二维码（字符串类） ".__FILE__." ".__LINE__."行");
         return $this->forver('QR_LIMIT_STR_SCENE',['scene_str'=>$val]);
     }
 
@@ -114,7 +108,6 @@ class Qrcode extends Driver {
     private function forver($action = 'QR_LIMIT_SCENE', $scene = ['scene_id'=>0]){
         $params = array_merge(['action_name'=>$action,'action_info'=>['scene'=>$scene]]);
 
-        $this->console("Qrcode助手和微信服务器通讯开始 ".__FILE__." ".__LINE__."行");
         $response = $this->post(Qrcode::API_QRCODE_URL."?access_token={$this->accessToken}",$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
@@ -127,7 +120,6 @@ class Qrcode extends Driver {
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
 
-        $this->console("Qrcode助手和微信服务器通讯完毕 ".Json::encode($data)." ".__FILE__." ".__LINE__."行");
         if(isset($data['errcode'])){
             throw new Exception($data['errmsg'],$data['errcode']);
         }
