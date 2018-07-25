@@ -96,7 +96,8 @@ class Js extends Driver {
      */
     public function ticket(){
 
-        $ticket = Yii::$app->cache->get($this->cacheKey);
+        $cacheKey = "{$this->cacheKey}-{$this->conf['app_id']}";
+        $ticket = Yii::$app->cache->get($cacheKey);
         if($ticket == false){
             //  从服务器获取
             $accessToken = (new AccessToken(['conf'=>$this->conf,'httpClient'=>$this->httpClient]))->getToken();
@@ -104,7 +105,7 @@ class Js extends Driver {
 
             $data = $response->setFormat(Client::FORMAT_JSON)->getData();
             $ticket = $data['ticket'];
-            Yii::$app->cache->set($this->cacheKey,$ticket,$data['expires_in']-600);
+            Yii::$app->cache->set($cacheKey,$ticket,$data['expires_in']-600);
         }
 
         return $ticket;
