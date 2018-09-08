@@ -1,8 +1,8 @@
 > 为了更好的维护这个项目，避免多点分心。答疑和bug提交请在我的知识分享( [点击进入](http://nai8.me/lang-7.html) )讨论页面提交，选择标签yii2-wx。
 
 <p align="center">
-    <a href="https://nai8.me/yii2wx">
-        <img src="https://nai8.me/images/yii2-wx-logo.png" height="150" alt="yii2-wx Logo"/>
+    <a href="https://nai8.me/study/yii2wx.html">
+        <img src="https://nai8.me/images/yii2wx/logo.png" height="100" alt="yii2-wx Logo"/>
     </a>
 </p>
 <p align="center">
@@ -17,20 +17,6 @@
 
 <hr/>
 
-<p align="center">
-    感谢下面伙伴的支持
-</p>
-<p align="center">
-    <a href="https://nai8.me">
-        <img src="https://nai8.me/images/logo.png" height="90" alt="https://nai8.me"/>
-    </a>
-</p>
-<p align="center">
-    <img src="https://nai8.me/images/qrcodes/xiaobao-qrcode.jpg" height="180" alt="北哥小报"/>
-</p>
-<p align="center">
-    除了代码，还有诗和远方。扫码关注我的公众号。
-</p>
 
 ## 文档
 - [中文文档](http://nai8.me/wiki/index.html?id=1)
@@ -135,12 +121,8 @@ $data = $qrcode->intTemp(3600,9527);// 生成一个数字类临时二维码，�
 
 ## 支持（Support）
 - [文档](http://nai8.me/wiki/index.html?id=1)
-- [社区交流](https://nai8.me/forum/index.html?id=7)
 
-更多请参考 https://nai8.me/lang-7.html
-
-## 一些有用的帖子
-- [在yii2-wx中如何正确的使用try....catch....](https://nai8.me/forum/detail.html?id=121)
+更多请参考 https://nai8.me/study/yii2wx.html
 
 ## 开源协议（License）
 MIT
