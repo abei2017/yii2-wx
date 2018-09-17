@@ -51,7 +51,7 @@ class Application extends Component {
         /**
          * 公众号接口
          */
-        'mp.base'=>'abei2017\wx\mp\core\Base',
+        'mp.base'=>'abei2017\wx\mp\core\Base',    // 二维码
         'mp.qrcode'=>'abei2017\wx\mp\qrcode\Qrcode',    // 二维码
         'mp.shorturl'=>'abei2017\wx\mp\qrcode\Shorturl',    // 短地址
         'mp.server'=>'abei2017\wx\mp\server\Server',    // 服务接口
@@ -76,6 +76,7 @@ class Application extends Component {
         'mini.pay'=>'abei2017\wx\mini\payment\Pay', // 支付
         'mini.qrcode'=>'abei2017\wx\mini\qrcode\Qrcode', // 二维码&小程序码
         'mini.template'=>'abei2017\wx\mini\template\Template', // 模板消息
+        'mini.custom'=>'abei2017\wx\mini\custom\Customer'
     ];
 
     public function init(){
