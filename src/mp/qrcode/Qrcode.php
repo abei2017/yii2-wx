@@ -12,9 +12,7 @@ namespace abei2017\wx\mp\qrcode;
 
 use abei2017\wx\core\Driver;
 use abei2017\wx\core\AccessToken;
-use yii\helpers\Json;
 use yii\httpclient\Client;
-use abei2017\wx\helpers\Util;
 
 /**
  * Qrcode
@@ -27,7 +25,7 @@ class Qrcode extends Driver {
 
     private $accessToken;
 
-    //  接口地址
+    //  生成临时二维码
     const API_QRCODE_URL = 'https://api.weixin.qq.com/cgi-bin/qrcode/create';
 
     public function init()
@@ -45,40 +43,43 @@ class Qrcode extends Driver {
      * @return array
      */
     public function intTemp($seconds = 2592000,$val){
-        return $this->temp('QR_SCENE',$seconds,['scene_id'=>$val]);
+        return $this->temp($seconds,$val);
     }
 
     public function strTemp($seconds = 2592000,$val){
-        return $this->temp('QR_STR_SCENE',$seconds,['scene_str'=>$val]);
+        return $this->temp($seconds,$val);
     }
 
-    private function temp($action = 'QR_SCENE', $seconds = 2592000, $scene = ['scene_id'=>0]){
-        if((int)$seconds > 2592000){
-            throw new Exception('临时二维码有效期最多只能2592000秒（30天）');
+    /**
+     * 生成一个临时二维码
+     * 此方法会根据$val的类型来决定是字符串还是整数。
+     *
+     * @param int $seconds  过期时间
+     * @param $val 值
+     * @since 1.2
+     */
+    public function temp($seconds = 2592000,$val){
+        if(is_int($val) && $val > 0){
+            return $this->tempQrcode('QR_SCENE',$seconds,['scene_id'=>$val]);
+        }else{
+            return $this->tempQrcode('QR_STR_SCENE',$seconds,['scene_str'=>$val]);
         }
+    }
 
-        if((int)$seconds <= 0){
-            //  如果填写不正确则默认为60秒，这样做主要是适配一些扫码登录功能。by abei
-            $seconds = 60;
-        }
-
+    /**
+     * 生成临时二维码
+     * @param string $action    数字还是字符串类型
+     * @param int $seconds  二维码过期时间
+     * @param array $scene  值
+     * @return mixed
+     */
+    private function tempQrcode($action = 'QR_SCENE', $seconds = 2592000, $scene = ['scene_id'=>0]){
         $params = array_merge(['expire_seconds'=>$seconds,'action_name'=>$action,'action_info'=>['scene'=>$scene]]);
-
         $response = $this->post(Qrcode::API_QRCODE_URL."?access_token={$this->accessToken}",$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
-        if($response->isOk == false){
-            throw new Exception(self::ERROR_NO_RESPONSE);
-        }
-
         $response->setFormat(Client::FORMAT_JSON);
-        $data = $response->getData();
-
-        if(isset($data['errcode'])){
-            throw new Exception("{$data['errcode']}#{$data['errmsg']}");
-        }
-
-        return $data;
+        return $response->getData();
     }
 
     /**
@@ -87,7 +88,7 @@ class Qrcode extends Driver {
      * @return mixed
      */
     public function intForver($val){
-        return $this->forver('QR_LIMIT_SCENE',['scene_id'=>$val]);
+        return $this->foreverQrcode('QR_LIMIT_SCENE',['scene_id'=>$val]);
     }
 
     /**
@@ -96,34 +97,30 @@ class Qrcode extends Driver {
      * @return mixed
      */
     public function strForver($val){
-        return $this->forver('QR_LIMIT_STR_SCENE',['scene_str'=>$val]);
+        return $this->foreverQrcode('QR_LIMIT_STR_SCENE',['scene_str'=>$val]);
     }
 
     /**
-     * 生成永久二维码
-     * @param string $action
-     * @param array $scene
-     * @return mixed
+     * 生成一个永久二维码
+     * 此方法会根据$val的类型来决定是字符串还是整数。
+     *
+     * @param $val 值
+     * @since 1.2
      */
-    private function forver($action = 'QR_LIMIT_SCENE', $scene = ['scene_id'=>0]){
-        $params = array_merge(['action_name'=>$action,'action_info'=>['scene'=>$scene]]);
+    public function forever($val){
+        if(is_int($val) && $val > 0){
+            return $this->foreverQrcode('QR_LIMIT_SCENE',['scene_id'=>$val]);
+        }else{
+            return $this->foreverQrcode('QR_LIMIT_STR_SCENE',['scene_str'=>$val]);
+        }
+    }
 
+    private function foreverQrcode($action = 'QR_LIMIT_SCENE', $scene = ['scene_id'=>0]){
+        $params = array_merge(['action_name'=>$action,'action_info'=>['scene'=>$scene]]);
         $response = $this->post(Qrcode::API_QRCODE_URL."?access_token={$this->accessToken}",$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
         $response->setFormat(Client::FORMAT_JSON);
-
-        if($response->isOk == false){
-            throw new Exception(self::ERROR_NO_RESPONSE);
-        }
-
-        $response->setFormat(Client::FORMAT_JSON);
-        $data = $response->getData();
-
-        if(isset($data['errcode'])){
-            throw new Exception($data['errmsg'],$data['errcode']);
-        }
-
-        return $data;
+        return $response->getData();
     }
 }
