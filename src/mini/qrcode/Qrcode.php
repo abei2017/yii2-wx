@@ -27,8 +27,11 @@ class Qrcode extends Driver {
     //  获取不受限制的小程序码
     const API_UN_LIMIT_CREATE = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
 
-    //  生成永久小程序码（数量有限）
+    //  生成永久小程序码，有数量限制（可定制）
     const API_CREATE = 'https://api.weixin.qq.com/wxa/getwxacode';
+
+    //  生成永久小程序码，有数量限制（简单类型）
+    const API_A_CREATE = 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode';
 
     private $accessToken = null;
 
@@ -68,10 +71,39 @@ class Qrcode extends Driver {
     /**
      * 生成永久小程序码
      * 数量有限
+     * 该方法生成的小程序码具有更多的可指定性
      */
     public function forever($path,$extra = []){
         $params = array_merge(['path'=>$path],$extra);
         $response = $this->post(self::API_CREATE."?access_token=".$this->accessToken,$params)
+            ->setFormat(Client::FORMAT_JSON)->send();
+
+        if($response->isOk == false){
+            throw new Exception(self::ERROR_NO_RESPONSE);
+        }
+
+        $contentType = $response->getHeaders()->get('content-type');
+        if(strpos($contentType,'json') != false){
+            $data = $response->getData();
+            if(isset($data['errcode'])){
+                throw new Exception($data['errmsg'],$data['errcode']);
+            }
+        }
+
+        return $response->getContent();
+    }
+
+    /**
+     * 生成永久小程序码
+     * 数量有限
+     *
+     * @param $path string 扫码进入的小程序页面路径
+     * @param int $width 二维码的宽度
+     * @since 1.2
+     */
+    public function simpleForever($path, $width = 430){
+        $params = ['path'=>$path,'width'=>$width];
+        $response = $this->post(self::API_A_CREATE."?access_token=".$this->accessToken,$params)
             ->setFormat(Client::FORMAT_JSON)->send();
 
         if($response->isOk == false){
