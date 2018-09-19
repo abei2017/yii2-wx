@@ -24,6 +24,7 @@ use yii\httpclient\Client;
 class Template extends Driver {
 
     const API_SEND_TMPL = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=';
+
     /**
      * 发送模板消息
      *
@@ -44,4 +45,6 @@ class Template extends Driver {
 
         return $response->getContent();
     }
+
+    
 }
