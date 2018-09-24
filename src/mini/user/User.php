@@ -17,7 +17,7 @@ use abei2017\wx\core\Exception;
 /**
  * User
  * @author abei<abei@nai8.me>
- * @link https://nai8.me/yii2wx
+ * @link https://nai8.me/study/yii2wx.html
  * @package abei2017\wx\mini\user
  */
 class User extends Driver {

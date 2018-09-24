@@ -85,7 +85,11 @@ yii2-wx采用单一接口驱动功能的思路，比如下面的代码将生成�
 ```php
 use abei2017\wx\Application;
 
-$conf = Yii::$app->params['wx']['mp'];
+//  方法一
+$qrcode = (new Application())->driver('mp.qrcode');
+
+//  方法二
+$conf = Yii::$app->params['wechat'];// 自定义配置数组key（最后一层数组key不可以更改）
 $app = new Application(['conf'=>$conf]);
 
 $qrcode = $app->driver('mp.qrcode');
