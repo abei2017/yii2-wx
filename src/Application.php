@@ -30,7 +30,7 @@ class Application extends Component {
      * yii2-wx配置
      * @var
      */
-    public $conf;
+    public $conf = [];
 
     /**
      * http客户端
@@ -41,7 +41,6 @@ class Application extends Component {
     /**
      * 类映射
      * @var array
-     * @since v1.3
      */
     public $classMap = [
         'core'=>[
@@ -83,6 +82,8 @@ class Application extends Component {
         $this->httpClient = new Client([
             'transport' => 'yii\httpclient\CurlTransport',
         ]);
+
+
     }
 
     /**
@@ -95,17 +96,30 @@ class Application extends Component {
      * @return object
      */
     public function driver($api,$extra = []){
+
+        $api = explode('.',$api);
+        if(empty($api) OR isset($this->classMap[$api[0]][$api[1]]) == false){
+            throw new Exception('很抱歉，你输入的API不合法。');
+        }
+
+        //  初始化conf
+        if(empty($this->conf)){
+            if(isset(Yii::$app->params['wx']) == false){
+                throw new Exception('请在yii2的配置文件中设置配置项wx');
+            }
+
+            if(isset(Yii::$app->params['wx'][$api[0]]) == false){
+                throw new Exception("请在yii2的配置文件中设置配置项wx[{$api[0]}]");
+            }
+
+            $this->conf = Yii::$app->params['wx'][$api[0]];
+        }
+
         $config = [
             'conf'=>$this->conf,
             'httpClient'=>$this->httpClient,
             'extra'=>$extra,
         ];
-
-        $api = explode('.',$api);
-
-        if(empty($api) OR isset($this->classMap[$api[0]][$api[1]]) == false){
-            throw new Exception('很抱歉，你输入的API不合法。');
-        }
 
         $config['class'] = $this->classMap[$api[0]][$api[1]];
 
