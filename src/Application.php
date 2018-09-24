@@ -20,7 +20,7 @@ use yii\httpclient\Client;
  * bootstrap
  * 此类负责模块其他类的驱动以及相关变量的初始化
  *
- * @link https://nai8.me/yii2wx
+ * @link https://nai8.me/study/yii2wx.html
  * @author abei<abei@nai8.me>
  * @package abei2017\wx
  */
@@ -41,42 +41,41 @@ class Application extends Component {
     /**
      * 类映射
      * @var array
+     * @since v1.3
      */
     public $classMap = [
-        /**
-         * 基础接口
-         */
-        'core.accessToken'=>'abei2017\wx\core\AccessToken',// token
+        'core'=>[
+            'accessToken'=>'abei2017\wx\core\AccessToken'
+        ],
 
-        /**
-         * 公众号接口
-         */
-        'mp.base'=>'abei2017\wx\mp\core\Base',    // 二维码
-        'mp.qrcode'=>'abei2017\wx\mp\qrcode\Qrcode',    // 二维码
-        'mp.shorturl'=>'abei2017\wx\mp\qrcode\Shorturl',    // 短地址
-        'mp.server'=>'abei2017\wx\mp\server\Server',    // 服务接口
-        'mp.remark'=>'abei2017\wx\mp\user\Remark',  //  会员备注
-        'mp.user'=>'abei2017\wx\mp\user\User',  //  会员管理
-        'mp.tag'=>'abei2017\wx\mp\user\Tag',    //  会员标签
-        'mp.menu'=>'abei2017\wx\mp\menu\Menu',  // 菜单
-        'mp.js'=>'abei2017\wx\mp\js\Js',    //  JS
-        'mp.template'=>'abei2017\wx\mp\template\Template', //   消息模板
-        'mp.pay'=>'abei2017\wx\mp\payment\Pay',//  支付接口
-        'mp.mch'=>'abei2017\wx\mp\payment\Mch',//  企业付款
-        'mp.redbag'=>'abei2017\wx\mp\payment\Redbag',//  红包
-        'mp.oauth'=>'abei2017\wx\mp\oauth\OAuth',//  web授权
-        'mp.resource'=>'abei2017\wx\mp\resource\Resource',//  素材
-        'mp.kf'=>'abei2017\wx\mp\kf\Kf',//  客服
-        'mp.customService'=>'abei2017\wx\mp\kf\CustomService',//  群发
+        'mp'=>[
+            'base'=>'abei2017\wx\mp\core\Base',    // 二维码
+            'qrcode'=>'abei2017\wx\mp\qrcode\Qrcode',    // 二维码
+            'shorturl'=>'abei2017\wx\mp\qrcode\Shorturl',    // 短地址
+            'server'=>'abei2017\wx\mp\server\Server',    // 服务接口
+            'remark'=>'abei2017\wx\mp\user\Remark',  //  会员备注
+            'user'=>'abei2017\wx\mp\user\User',  //  会员管理
+            'tag'=>'abei2017\wx\mp\user\Tag',    //  会员标签
+            'menu'=>'abei2017\wx\mp\menu\Menu',  // 菜单
+            'js'=>'abei2017\wx\mp\js\Js',    //  JS
+            'template'=>'abei2017\wx\mp\template\Template', //   消息模板
+            'pay'=>'abei2017\wx\mp\payment\Pay',//  支付接口
+            'mch'=>'abei2017\wx\mp\payment\Mch',//  企业付款
+            'redbag'=>'abei2017\wx\mp\payment\Redbag',//  红包
+            'oauth'=>'abei2017\wx\mp\oauth\OAuth',//  web授权
+            'resource'=>'abei2017\wx\mp\resource\Resource',//  素材
+            'kf'=>'abei2017\wx\mp\kf\Kf',//  客服
+            'customService'=>'abei2017\wx\mp\kf\CustomService',//  群发
+        ],
 
-        /**
-         * 微信小程序接口
-         */
-        'mini.user'=>'abei2017\wx\mini\user\User', // 会员
-        'mini.pay'=>'abei2017\wx\mini\payment\Pay', // 支付
-        'mini.qrcode'=>'abei2017\wx\mini\qrcode\Qrcode', // 二维码&小程序码
-        'mini.template'=>'abei2017\wx\mini\template\Template', // 模板消息
-        'mini.custom'=>'abei2017\wx\mini\custom\Customer'
+        'mini'=>[
+            'user'=>'abei2017\wx\mini\user\User', // 会员
+            'pay'=>'abei2017\wx\mini\payment\Pay', // 支付
+            'qrcode'=>'abei2017\wx\mini\qrcode\Qrcode', // 二维码&小程序码
+            'template'=>'abei2017\wx\mini\template\Template', // 模板消息
+            'custom'=>'abei2017\wx\mini\custom\Customer'
+        ]
+
     ];
 
     public function init(){
@@ -102,11 +101,13 @@ class Application extends Component {
             'extra'=>$extra,
         ];
 
-        if(empty($api) OR isset($this->classMap[$api]) == false){
+        $api = explode('.',$api);
+
+        if(empty($api) OR isset($this->classMap[$api[0]][$api[1]]) == false){
             throw new Exception('很抱歉，你输入的API不合法。');
         }
 
-        $config['class'] = $this->classMap[$api];
+        $config['class'] = $this->classMap[$api[0]][$api[1]];
 
         return Yii::createObject($config);
     }
