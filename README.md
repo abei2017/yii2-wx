@@ -13,7 +13,7 @@
     <img class="license_img" src="https://poser.pugx.org/abei2017/yii2-wx/license">
 </p>
 <p align="center">
-    [![Waffle.io - Columns and their card count](https://badge.waffle.io/abei2017/yii2-wx.svg?columns=all)](https://waffle.io/abei2017/yii2-wx)
+    <img src="https://badge.waffle.io/abei2017/yii2-wx.svg?columns=all"/>
 </p>
 
 <hr/>
