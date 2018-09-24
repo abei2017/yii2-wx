@@ -34,4 +34,24 @@ class User extends Driver {
         $data = $response->getData();
         return $data;
     }
+
+    /**
+     * 解密信息
+     * 主要用于wx.getUserInfo时对加密数据的解密。
+     *
+     * @param $sessionKey
+     * @param $iv
+     * @param $encryptedData
+     * @return mixed
+     * @since 1.3
+     */
+    public function decryptData($sessionKey,$iv,$encryptedData){
+        $aesKey = base64_decode($sessionKey);
+        $aesIV = base64_decode($iv);
+        $aesCipher = base64_decode($encryptedData);
+        $result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+
+        $dataObj = json_decode( $result );
+        return $dataObj;
+    }
 }
