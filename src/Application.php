@@ -38,6 +38,10 @@ class Application extends Component {
      */
     public $httpClient;
 
+    public $httpConf = [
+        'transport' => 'yii\httpclient\CurlTransport',
+    ];
+
     /**
      * 类映射
      * @var array
@@ -79,11 +83,7 @@ class Application extends Component {
 
     public function init(){
         parent::init();
-        $this->httpClient = new Client([
-            'transport' => 'yii\httpclient\CurlTransport',
-        ]);
-
-
+        $this->httpClient = new Client($this->httpConf);
     }
 
     /**
