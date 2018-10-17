@@ -42,8 +42,8 @@ class User extends Driver {
      * @param $sessionKey
      * @param $iv
      * @param $encryptedData
-     * @return mixed
-     * @since 1.3
+     * @return array
+     * @since 1.3.1
      */
     public function decryptData($sessionKey,$iv,$encryptedData){
         $aesKey = base64_decode($sessionKey);
@@ -51,7 +51,7 @@ class User extends Driver {
         $aesCipher = base64_decode($encryptedData);
         $result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
 
-        $dataObj = json_decode( $result );
+        $dataObj = json_decode( $result,true );
         return $dataObj;
     }
 }
