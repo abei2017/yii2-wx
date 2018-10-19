@@ -68,6 +68,9 @@ return [
             //  基本配置
             'app_id'  => '', 
             'secret'  => '',
+            'token' => '',
+            'safeMode'=>0,
+            'encodingAESKey'=>'',
             //  微信支付
             'payment' => [
                 'mch_id'        => '',
