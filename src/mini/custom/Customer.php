@@ -76,7 +76,7 @@ class Customer extends Driver {
      * @param $mediaId string 媒体文件ID
      * @since 1.2
      */
-    public function get($mediaId){
+    public function getMedia($mediaId){
         $response = $this->get(self::TEMP_MEDIA."?access_token={$this->accessToken}&media_id={$mediaId}")
             ->send();
 
