@@ -13,6 +13,7 @@ namespace abei2017\wx\mp\menu;
 
 use abei2017\wx\core\Driver;
 use abei2017\wx\core\AccessToken;
+use yii\helpers\VarDumper;
 use yii\httpclient\Client;
 use abei2017\wx\core\Exception;
 
@@ -66,8 +67,11 @@ class Menu extends Driver {
      * @return boolean
      */
     public function create($buttons = []){
-        $response = $this->post(self::API_MENU_CREATE_URL."?access_token=".$this->accessToken,$buttons)
-            ->setFormat(Client::FORMAT_JSON)->send();
+        $this->httpClient->formatters = ['uncodeJson'=>'abei2017\wx\helpers\JsonFormatter'];
+        $request = $this->post(self::API_MENU_CREATE_URL."?access_token=".$this->accessToken,$buttons)
+            ->setFormat('uncodeJson');
+
+        $response = $request->send();
 
         if($response->isOk == false){
             throw new Exception(self::ERROR_NO_RESPONSE);
