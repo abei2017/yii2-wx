@@ -10,6 +10,7 @@
 
 namespace abei2017\wx\mini\template;
 
+use abei2017\wx\core\AccessToken;
 use abei2017\wx\core\Driver;
 use Yii;
 use yii\httpclient\Client;
@@ -21,9 +22,18 @@ use yii\httpclient\Client;
  * @link https://nai8.me/yii2wx
  * @package abei2017\wx\mini\template
  */
-class Template extends Driver {
+class Template extends Driver
+{
 
     const API_SEND_TMPL = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=';
+
+    private $accessToken = null;
+
+    public function init()
+    {
+        parent::init();
+        $this->accessToken = (new AccessToken(['conf' => $this->conf, 'httpClient' => $this->httpClient]))->getToken();
+    }
 
     /**
      * 发送模板消息
@@ -34,17 +44,18 @@ class Template extends Driver {
      * @param $data
      * @param array $extra
      */
-    public function send($toUser,$templateId,$formId,$data,$extra = []){
+    public function send($toUser, $templateId, $formId, $data, $extra = [])
+    {
         $params = array_merge([
-            'touser'=>$toUser,
-            'template_id'=>$templateId,
-            'form_id'=>$formId,
-            'data'=>$data,
-        ],$extra);
-        $response = $this->post(self::API_SEND_TMPL.$this->accessToken->getToken(),$params)->setFormat(Client::FORMAT_JSON)->send();
+            'touser' => $toUser,
+            'template_id' => $templateId,
+            'form_id' => $formId,
+            'data' => $data,
+        ], $extra);
+        $response = $this->post(self::API_SEND_TMPL . $this->accessToken->getToken(), $params)->setFormat(Client::FORMAT_JSON)->send();
 
         return $response->getContent();
     }
 
-    
+
 }
