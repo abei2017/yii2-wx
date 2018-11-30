@@ -52,7 +52,7 @@ class Template extends Driver
             'form_id' => $formId,
             'data' => $data,
         ], $extra);
-        $response = $this->post(self::API_SEND_TMPL . $this->accessToken->getToken(), $params)->setFormat(Client::FORMAT_JSON)->send();
+        $response = $this->post(self::API_SEND_TMPL . $this->accessToken, $params)->setFormat(Client::FORMAT_JSON)->send();
 
         return $response->getContent();
     }
