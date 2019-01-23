@@ -13,6 +13,7 @@ namespace abei2017\wx\mini\template;
 use abei2017\wx\core\Driver;
 use Yii;
 use yii\httpclient\Client;
+use abei2017\wx\core\AccessToken;
 
 /**
  * Template
@@ -25,6 +26,12 @@ class Template extends Driver {
 
     const API_SEND_TMPL = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=';
 
+    private $accessToken = null;
+
+    public function init(){
+        parent::init();
+        $this->accessToken = (new AccessToken(['conf'=>$this->conf,'httpClient'=>$this->httpClient]))->getToken(true);
+    }
     /**
      * 发送模板消息
      *
@@ -41,10 +48,8 @@ class Template extends Driver {
             'form_id'=>$formId,
             'data'=>$data,
         ],$extra);
-        $response = $this->post(self::API_SEND_TMPL.$this->accessToken->getToken(),$params)->setFormat(Client::FORMAT_JSON)->send();
+        $response = $this->post(self::API_SEND_TMPL.$this->accessToken,$params)->setFormat(Client::FORMAT_JSON)->send();
 
         return $response->getContent();
     }
-
-    
 }
