@@ -1,6 +1,6 @@
 <p align="center">
-    <a href="https://nai8.me/study/yii2wx.html">
-        <img src="https://nai8.me/images/yii2wx/logo.png" height="100" alt="yii2-wx Logo"/>
+    <a href="https://yii2-wx.com">
+        <img src="http://www.yii2-wx.com/images/logo.png" height="100" alt="yii2-wx Logo"/>
     </a>
 </p>
 <p align="center">
@@ -11,9 +11,6 @@
     <img class="total_img" src="https://poser.pugx.org/abei2017/yii2-wx/downloads">
     <img class="latest_unstable_version_img" src="https://poser.pugx.org/abei2017/yii2-wx/v/unstable">
     <img class="license_img" src="https://poser.pugx.org/abei2017/yii2-wx/license">
-</p>
-<p align="center">
-    <img src="https://badge.waffle.io/abei2017/yii2-wx.svg?columns=all"/>
 </p>
 
 <hr/>
