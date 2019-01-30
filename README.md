@@ -17,7 +17,7 @@
 
 
 ## 文档
-- [中文文档](http://nai8.me/wiki/index.html?id=1)
+- [中文文档](http://www.yii2-wx.com/wiki)
 
 ## 系统需求（Requirement）
 - PHP >= 5.4
@@ -120,16 +120,6 @@ $data = $qrcode->intTemp(3600,9527);// 生成一个数字类临时二维码，�
 - [x] 小程序模板
 - [x] 小程序客服消息
 
-## 学习yii2-wx（learning yii2-wx）
-北哥已将yii2-wx的配置和使用设计的简单易懂，因此通过文档和速查表你可以轻松的学会它，但是这也需要你之前对微信相关文档有所阅读。
-
-如果你是一名yii2或微信接口开发的初学者，我在自己的知识分享设置了一套针对性的视频课程（<a href="https://nai8.me/book/view.html?id=19" target="_blank">点击查看</a>），我想能让你零起步。
-
-## 支持（Support）
-- [文档](http://nai8.me/wiki/index.html?id=1)
-- [社区交流](https://segmentfault.com/t/yii2-wx)
-
-更多请参考 https://nai8.me/study/yii2wx.html
 
 ## 开源协议（License）
 MIT
