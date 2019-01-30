@@ -52,6 +52,7 @@ class Application extends Component {
         ],
 
         'mp'=>[
+            'accessToken'=>'abei2017\wx\mp\core\AccessToken',
             'base'=>'abei2017\wx\mp\core\Base',    // 二维码
             'qrcode'=>'abei2017\wx\mp\qrcode\Qrcode',    // 二维码
             'shorturl'=>'abei2017\wx\mp\qrcode\Shorturl',    // 短地址
@@ -72,6 +73,7 @@ class Application extends Component {
         ],
 
         'mini'=>[
+            'accessToken'=>'abei2017\wx\mini\core\AccessToken',
             'user'=>'abei2017\wx\mini\user\User', // 会员
             'pay'=>'abei2017\wx\mini\payment\Pay', // 支付
             'qrcode'=>'abei2017\wx\mini\qrcode\Qrcode', // 二维码&小程序码
