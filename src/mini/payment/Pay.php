@@ -71,6 +71,7 @@ class Pay extends Driver {
         $attrs['sign'] = Util::makeSign($attrs,$this->conf['payment']['key']);
 
         $response = $this->post(self::PREPARE_URL,$attrs)->setFormat(Client::FORMAT_XML)->send();
+        $response->setFormat(Client::FORMAT_XML);
         return $this->prepare = (object)$response->getData();
     }
 
