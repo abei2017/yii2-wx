@@ -11,15 +11,16 @@
 
 namespace abei2017\wx\core;
 
-use abei2017\wx\helpers\Util;
 use yii\base\Component;
+use yii\httpclient\Client;
 
 /**
  * 接口类
  * 该类主要抽象出每个接口类必须的几个属性
  * @package abei2017\wx\core
  */
-class Driver extends Component {
+class Driver extends Component
+{
 
     /**
      * ERRORS
@@ -28,13 +29,17 @@ class Driver extends Component {
 
     public $conf;
     public $extra;
+    /**
+     * @var Client
+     */
     public $httpClient;
 
     /**
      * 生成一个request请求
      * @return mixed
      */
-    protected function request(){
+    protected function request()
+    {
         return $this->httpClient->createRequest();
     }
 
@@ -47,13 +52,26 @@ class Driver extends Component {
      * @param $options array 操作项
      * @return mixed
      */
-    protected function get($url,$params = [], $headers = [], $options = []){
-        return $this->httpClient->get($url,$params,$headers,$options);
+    protected function get($url, $params = [], $headers = [], $options = [])
+    {
+        return $this->httpClient->get($url, $params, $headers, $options);
     }
 
-    protected function post($url,$params = [], $headers = [], $options = []){
-        return $this->httpClient->post($url,$params,$headers,$options);
+    protected function post($url, $params = [], $headers = [], $options = [])
+    {
+        return $this->httpClient->post($url, $params, $headers, $options);
     }
 
-
+    protected function upload($url, $file, $params = [], $headers = [], $options = [])
+    {
+        list($fileField, $file) = $file;
+        return $this->httpClient
+            ->createRequest()
+            ->setUrl($url)
+            ->setMethod('POST')
+            ->addHeaders($headers)
+            ->addOptions($options)
+            ->setData($params)
+            ->addFile($fileField, $file);
+    }
 }

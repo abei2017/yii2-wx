@@ -22,7 +22,8 @@ use yii\httpclient\Client;
  * @package abei2017\wx\core\accessToken
  * @author abei<abei@nai8.me>
  */
-class AccessToken extends Driver {
+class AccessToken extends Driver
+{
 
     //  获取access_token的接口地址
     const API_TOKEN_GET = 'https://api.weixin.qq.com/cgi-bin/token';
@@ -37,18 +38,19 @@ class AccessToken extends Driver {
      * @author abei<abei@nai8.me>
      * @return string
      */
-    public function getToken($cacheRefresh = false){
+    public function getToken($cacheRefresh = false)
+    {
         $cacheKey = "{$this->cacheKey}-{$this->conf['app_id']}";
-        if($cacheRefresh == true){
+        if ($cacheRefresh == true) {
             Yii::$app->cache->delete($cacheKey);
         }
 
         $data = Yii::$app->cache->get($cacheKey);
-        if($data == false){
+        if ($data == false) {
             $token = $this->getTokenFromServer();
 
             $data = $token['access_token'];
-            Yii::$app->cache->set($cacheKey,$data,$token['expires_in']-600);
+            Yii::$app->cache->set($cacheKey, $data, $token['expires_in'] - 600);
         }
 
         return $data;
@@ -61,23 +63,25 @@ class AccessToken extends Driver {
      * @author abei<abei@nai8.me>
      * @throws \abei2017\wx\core\Exception
      */
-    public function getTokenFromServer(){
+    public function getTokenFromServer()
+    {
         $params = [
-            'grant_type'=>'client_credential',
-            'appid'=>$this->conf['app_id'],
-            'secret'=>$this->conf['secret']
+            'grant_type' => 'client_credential',
+            'appid' => $this->conf['app_id'],
+            'secret' => $this->conf['secret']
         ];
 
-        $response = $this->get(self::API_TOKEN_GET,$params)->send();
+        $response = $this->get(self::API_TOKEN_GET, $params)->send();
 
-        if($response->isOk == false){
+        if ($response->isOk == false) {
             throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
-        if(!isset($data['access_token'])){
-            throw new Exception($data['errmsg'],$data['errcode']);
+        
+        if (!isset($data['access_token'])) {
+            throw new Exception($data['errmsg'], $data['errcode']);
         }
 
         return $data;
