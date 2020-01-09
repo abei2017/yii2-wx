@@ -20,8 +20,22 @@ $application = new yii\web\Application([
             'class' => 'yii\caching\FileCache',
             'cachePath' => '@runtime/cache'
         ],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info', 'error', 'warning'],
+//                  'categories' => ['yii\db\*'],
+                    'logVars' => [],
+                    'logFile' => '@runtime/log/app.log'
+                ],
+            ]
+        ]
     ]
 ]);
+
+
 
 $conf = file_get_contents('./config.txt');
 $conf = json_decode($conf, 1);

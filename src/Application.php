@@ -77,6 +77,7 @@ class Application extends Component
             'pay' => 'abei2017\wx\mini\payment\Pay', // 支付
             'qrcode' => 'abei2017\wx\mini\qrcode\Qrcode', // 二维码&小程序码
             'template' => 'abei2017\wx\mini\template\Template', // 模板消息
+            'subscribe' => 'abei2017\wx\mini\subscribe\Subscribe', // 订阅消息
             'custom' => 'abei2017\wx\mini\custom\Customer',
             'server' => 'abei2017\wx\mini\custom\Server',
             'imgcheck' => 'abei2017\wx\mini\seccheck\ImgCheck', // 图片内容监测
