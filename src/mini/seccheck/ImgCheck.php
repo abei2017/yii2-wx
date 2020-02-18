@@ -21,6 +21,8 @@ class ImgCheck extends Driver
 
     private $accessToken = null;
 
+    private $_retries = 0;
+
     public function init()
     {
         parent::init();
@@ -55,6 +57,14 @@ class ImgCheck extends Driver
 
         if ($response->isOk) {
             $content = json_decode($response->getContent(), 1);
+
+            if ($content['errcode'] == 87015 && $this->_retries < 3) {
+                $this->_retries++;
+                return $this->check($image, $isRemote);
+            } else {
+                return true;
+            }
+
             if ($content['errcode'] == 0) {
                 return true;
             } else {
