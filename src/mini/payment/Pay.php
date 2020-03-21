@@ -70,7 +70,7 @@ class Pay extends Driver {
         $attrs['nonce_str'] = Yii::$app->security->generateRandomString(32);
         $attrs['sign'] = Util::makeSign($attrs,$this->conf['payment']['key']);
 
-        $response = $this->post(self::PREPARE_URL,$attrs)->setFormat(Client::FORMAT_XML)->send();
+        $response = $this->post(self::PREPARE_URL,$attrs)->setFormat(Client::FORMAT_XML)->send()->setFormat(Client::FORMAT_XML);
         return $this->prepare = (object)$response->getData();
     }
 
