@@ -37,12 +37,17 @@ class Mch extends Driver {
      * @return array
      */
     public function send($params = []){
+        //  主要解决在console模式下无法通过Yii的request组件获取IP问题。
+        $ip = isset($params['ip']) ? $params['ip'] : Yii::$app->request->userIP;
         $conf = [
             'mch_appid'=>$this->conf['app_id'],
             'mchid'=>$this->conf['payment']['mch_id'],
-            'spbill_create_ip'=>Yii::$app->request->userIP,
+            'spbill_create_ip'=>$ip,
             'nonce_str'=>Yii::$app->security->generateRandomString(32)
         ];
+
+        if (isset($params['ip'])) unset($params['ip']);
+
         $params = array_merge($params,$conf);
         $params['sign'] = Util::makeSign($params,$this->conf['payment']['key']);
 
