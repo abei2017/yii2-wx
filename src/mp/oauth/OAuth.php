@@ -52,7 +52,6 @@ class OAuth extends Driver
     public function qrcode()
     {
         $url = "https://open.weixin.qq.com/connect/qrconnect?appid={$this->conf['app_id']}&redirect_uri={$this->conf['oauth']['callback']}&response_type=code&scope={$this->conf['oauth']['scopes']}&state=STATE#wechat_redirect";
-        return $url;
         header("Location: {$url}");
     }
 
