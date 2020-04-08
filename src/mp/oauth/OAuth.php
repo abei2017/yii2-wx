@@ -22,8 +22,10 @@ use abei2017\wx\core\Exception;
  * @author abei<abei@nai8.me>
  * @link http://nai8.me/yii2wx
  */
-class OAuth extends Driver {
+class OAuth extends Driver
+{
 
+    const API_QRCODE_URL = "https://open.weixin.qq.com/connect/qrconnect";
     const API_AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize";
     const API_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
     const API_USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo";
@@ -45,10 +47,21 @@ class OAuth extends Driver {
     protected $refreshAccessTokenCacheKey = 'wx-oauth-refresh-access-token';
 
     /**
+     * @desc 跳转扫描二维码页面
+     */
+    public function qrcode()
+    {
+        $url = "https://open.weixin.qq.com/connect/qrconnect?appid={$this->conf['app_id']}&redirect_uri={$this->conf['oauth']['callback']}&response_type=code&scope={$this->conf['oauth']['scopes']}&state=STATE#wechat_redirect";
+        return $url;
+        header("Location: {$url}");
+    }
+
+    /**
      * 跳转到授权页面
      */
-    public function send(){
-        $url = self::API_AUTHORIZE_URL."?appid={$this->conf['app_id']}&redirect_uri={$this->conf['oauth']['callback']}&response_type=code&scope={$this->conf['oauth']['scopes']}&state=STATE#wechat_redirect";
+    public function send()
+    {
+        $url = self::API_AUTHORIZE_URL . "?appid={$this->conf['app_id']}&redirect_uri={$this->conf['oauth']['callback']}&response_type=code&scope={$this->conf['oauth']['scopes']}&state=STATE#wechat_redirect";
         header("location:{$url}");
     }
 
@@ -58,22 +71,23 @@ class OAuth extends Driver {
      * @return bool
      * @throws Exception
      */
-    protected function initAccessToken(){
-        if($this->accessToken){
+    protected function initAccessToken()
+    {
+        if ($this->accessToken) {
             return $this->accessToken;
         }
 
         $code = $this->getCode();
-        $url = self::API_ACCESS_TOKEN_URL."?appid={$this->conf['app_id']}&secret={$this->conf['secret']}&code={$code}&grant_type=authorization_code";
+        $url = self::API_ACCESS_TOKEN_URL . "?appid={$this->conf['app_id']}&secret={$this->conf['secret']}&code={$code}&grant_type=authorization_code";
 
         $response = $this->get($url)->send();
-        if($response->isOk == false){
+        if ($response->isOk == false) {
             throw new Exception(self::ERROR_NO_RESPONSE);
         }
 
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
-        if(isset($data['errcode']) && $data['errcode'] != 0){
+        if (isset($data['errcode']) && $data['errcode'] != 0) {
             throw new Exception($data['errmsg'], $data['errcode']);
         }
 
@@ -87,8 +101,9 @@ class OAuth extends Driver {
      * 获得web授权的access token和openId
      * @return bool
      */
-    public function getOpenId(){
-        if($this->openId){
+    public function getOpenId()
+    {
+        if ($this->openId) {
             return $this->openId;
         }
 
@@ -97,8 +112,9 @@ class OAuth extends Driver {
         return $this->openId;
     }
 
-    protected function getCode(){
-        if($this->code == false){
+    protected function getCode()
+    {
+        if ($this->code == false) {
             $this->code = Yii::$app->request->get('code');
         }
 
@@ -111,17 +127,18 @@ class OAuth extends Driver {
      * @return mixed
      * @throws Exception
      */
-    public function user(){
+    public function user()
+    {
         $this->initAccessToken();
-        $url = self::API_USER_INFO_URL."?access_token={$this->accessToken}&openid={$this->openId}&lang=zh_CN";
+        $url = self::API_USER_INFO_URL . "?access_token={$this->accessToken}&openid={$this->openId}&lang=zh_CN";
 
         $response = $this->get($url)->send();
-        if($response->isOk == false){
+        if ($response->isOk == false) {
             throw new Exception(self::ERROR_NO_RESPONSE);
         }
         $response->setFormat(Client::FORMAT_JSON);
         $data = $response->getData();
-        if(isset($data['errcode']) && $data['errcode'] != 0){
+        if (isset($data['errcode']) && $data['errcode'] != 0) {
             throw new Exception($data['errmsg'], $data['errcode']);
         }
 

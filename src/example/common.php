@@ -44,6 +44,10 @@ $sdk = new \abei2017\wx\Application([
     'conf' => [
         'app_id' => $conf['appkey'],
         'secret' => $conf['appsecret'],
+        'oauth' => [
+            'scopes' => $conf['mp.qrcode.scopes'],
+            'callback' => $conf['mp.qrcode.callback']
+        ]
     ]
 ]);
 
