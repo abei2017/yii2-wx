@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://nai8.me/app/default_index.html?app_id=2">
+    <a href="https://nai8.me/app-2.html">
         <img src="https://nai8.me/uploads/app/2020/1127/1813An_g7OlYoUoSpTmBuVY-U88r_1xB-1606429437.png" height="100" alt="yii2-wx Logo"/>
     </a>
 </p>
@@ -120,6 +120,7 @@ $data = $qrcode->intTemp(3600,9527);// 生成一个数字类临时二维码，�
 - [x] 小程序的微信支付
 - [x] 小程序模板
 - [x] 小程序客服消息
+- [x] 内容安全
 
 
 ## 开源协议（License）
