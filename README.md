@@ -1,6 +1,6 @@
 <p align="center">
-    <a href="https://yii2-wx.com">
-        <img src="http://www.yii2-wx.com/images/logo.png" height="100" alt="yii2-wx Logo"/>
+    <a href="https://nai8.me/app/default_index.html?app_id=2">
+        <img src="https://nai8.me/uploads/app/2020/1127/1813An_g7OlYoUoSpTmBuVY-U88r_1xB-1606429437.png" height="100" alt="yii2-wx Logo"/>
     </a>
 </p>
 <p align="center">
@@ -17,7 +17,7 @@
 
 
 ## 文档
-- [中文文档](http://www.yii2-wx.com/wiki)
+- [中文文档](https://nai8.me/app/book_detail.html?id=8)
 
 ## 系统需求（Requirement）
 - PHP >= 5.4
