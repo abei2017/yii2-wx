@@ -80,6 +80,7 @@ class Application extends Component {
             'template'=>'abei2017\wx\mini\template\Template', // 模板消息
             'custom'=>'abei2017\wx\mini\custom\Customer',
             'server'=>'abei2017\wx\mini\custom\Server',
+            'security'=>'abei2017\wx\mini\security\Security',// 内容安全
         ]
 
     ];
