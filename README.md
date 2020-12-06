@@ -19,6 +19,9 @@
 ## 文档
 - [中文文档](https://nai8.me/app/book_detail.html?id=8)
 
+## 业务的实现方案以及生态
+- [使用yii2-wx轻松实现PC端用微信扫描小程序码直接登录功能](https://nai8.me/app/book_item.html?id=116)
+
 ## 系统需求（Requirement）
 - PHP >= 5.4
 - Composer
